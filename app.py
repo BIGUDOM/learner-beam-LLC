@@ -473,22 +473,19 @@ def verify_email():
 
 @app.route("/loginp", methods=["POST"])
 def verifylogin():
+    # --- GET JSON DATA ---
+    data = request.get_json()
+    if not data:
+        return jsonify({"status": "error", "message": "Invalid or missing JSON"}), 400
+    
+    for field in ["email", "password"]:
+        if not data.get(field):
+            return jsonify({"status": "error", "message": f"Missing field: {field}"}), 400
     conn = None
-    cursor = None
     try:
         # --- CREATE A NEW DB CONNECTION ---
         conn = get_db()
         cursor = conn.cursor()
-
-        # --- GET JSON DATA ---
-        data = request.get_json()
-        if not data:
-            return jsonify({"status": "error", "message": "Invalid or missing JSON"}), 400
-
-        for field in ["email", "password"]:
-            if not data.get(field):
-                return jsonify({"status": "error", "message": f"Missing field: {field}"}), 400
-
         # --- FETCH USER ---
         cursor.execute(
             "SELECT password_hash, locked, failed_attempts, last_failed_login, email, lock_reason, user_id FROM USER_BASE WHERE email=%s",
@@ -496,11 +493,11 @@ def verifylogin():
         )
         user = cursor.fetchone()
         if not user:
-            return jsonify({"status": "error", "message": "User not found"}), 400
+            return jsonify({"status": "error", "message": "User not found"}), 401
 
         # --- CHECK IF ACCOUNT IS LOCKED ---
         if user[1]:  # locked
-            return jsonify({"status": "error", "message": f"Account locked! Reason: {user[5]}"}), 400
+            return jsonify({"status": "error", "message": f"Account locked! Reason: {user[5]}"}), 403
 
         # --- VERIFY PASSWORD ---
         hashed = hashlib.sha256(data['password'].encode()).hexdigest()
@@ -517,7 +514,7 @@ def verifylogin():
                     ("Too many failed login attempts", data['email'])
                 )
             conn.commit()
-            return jsonify({"status": "error", "message": "Incorrect Password"}), 400
+            return jsonify({"status": "error", "message": "Incorrect Password"}), 401
 
         # --- SUCCESSFUL LOGIN ---
         cursor.execute(
@@ -672,8 +669,6 @@ def verifylogin():
         return jsonify({"status": "error", "message": f"Login failed: {str(e)}"}), 500
 
     finally:
-        if cursor:
-            cursor.close()
         if conn:
             conn.close()
 
@@ -1334,6 +1329,7 @@ def request_withdraw():
 if __name__ == "__main__":      
 
     app.run()
+
 
 
 

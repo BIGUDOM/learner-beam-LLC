@@ -105,8 +105,7 @@ loginForm.addEventListener('submit', async function(e) {
         });
 
         // --- Always get raw text first ---
-        const raw = await response.text();
-        const data = JSON.parse(raw);
+        const data = await response.json();
 
     
 
@@ -122,7 +121,7 @@ loginForm.addEventListener('submit', async function(e) {
     } catch (error) {
         clearLoading(loginBtn);
         console.error("Fetch error:", error);
-        showErrorModal("An error occurred during login. Please check your network and try again.");
+        showErrorModal( "Fetch error:", error || "An error occurred during login. Please check your network and try again.");
     }
 });
 
@@ -495,6 +494,7 @@ function clearLoading(button) {
     button.innerHTML = button.dataset.originalText || "Submit";
     button.disabled = false;
 }
+
 
 
 

@@ -86,12 +86,11 @@ loginForm.addEventListener('submit', async function (e) {
     const password = document.getElementById("password_input").value;
 
     if (!email || !password) {
-        alert('email and password are required');
+        alert('Email and password are required');
         return;
     }
 
     const data = { email, password };
-
     const loginBtn = document.getElementById("submitBtn");
     setLoading(loginBtn, "Logging in...");
 
@@ -102,19 +101,28 @@ loginForm.addEventListener('submit', async function (e) {
             body: JSON.stringify(data)
         });
 
-        const result = await response.json();
-        console.log("login response:", result);
+        let result;
+        try {
+            // Try parsing JSON safely
+            result = await response.json();
+        } catch (parseError) {
+            const raw = await response.text();
+            console.error("Failed to parse JSON from server:", parseError);
+            console.error("RAW RESPONSE:", raw);
+            showErrorModal("Server returned invalid response. Please try again later.");
+            return;
+        }
+
+        console.log("Login response:", result);
 
         if (result.status === "success") {
             showSuccessModal("Login successful!", "/dashboard", 2000);
-
-        
         } else {
-            showErrorModal(data.message || "Login failed");
+            showErrorModal(result.message || "Login failed");
         }
 
-    } catch (error) {
-        console.error("Fetch error:", error);
+    } catch (networkError) {
+        console.error("Network or fetch error:", networkError);
         showErrorModal("An error occurred during login. Please check your network and try again.");
     } finally {
         clearLoading(loginBtn);
@@ -490,6 +498,7 @@ function clearLoading(button) {
     button.innerHTML = button.dataset.originalText || "Submit";
     button.disabled = false;
 }
+
 
 
 

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Leaner Beam LLC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/admin.css">
+</head>
+<body>
+    <!-- Admin Login Page -->
+    <div class="login-container" id="loginPage">
+        <div class="login-card">
+            <div class="login-header">
+                <h1><i class="fas fa-user-shield"></i> Admin Access</h1>
+                <p>Leaner Beam LLC Administration Panel</p>
+                <div class="admin-badge">
+                    <i class="fas fa-lock"></i> Secure Login Required
+                </div>
+            </div>
+            <div class="login-body">
+                <form id="adminLoginForm">
+                    <div class="form-group">
+                        <label for="adminUsername">Admin Username</label>
+                        <input type="text" id="adminUsername" class="form-control" placeholder="Enter admin username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="adminPassword">Admin Password</label>
+                        <input type="password" id="adminPassword" class="form-control" placeholder="Enter admin password" required>
+                        <div class="error-message" id="loginError">
+                            <i class="fas fa-exclamation-circle"></i> Invalid username or password. Please try again.
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="login-btn" id="loginBtn">
+                        <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Admin Dashboard (Hidden by default) -->
+    <div class="dashboard" id="dashboardPage" style="display: block;">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-shield-alt"></i> Admin Panel</h3>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <div class="sidebar-item">
+                    <a href="#" class="sidebar-link active">
+                        <i class="fas fa-users"></i> Users Management
+                    </a>
+                </div>
+                <div class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-exchange-alt"></i> Transactions
+                    </a>
+                </div>
+                <div class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-chart-bar"></i> Analytics
+                    </a>
+                </div>
+                <div class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-wallet"></i> Wallet Management
+                    </a>
+                </div>
+                <div class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-ticket-alt"></i> Coupons
+                    </a>
+                </div>
+                <div class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-cog"></i> System Settings
+                    </a>
+                </div>
+                <div class="sidebar-item">
+                    <button class="sidebar-link logout-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header>
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="header-title"><i class="fas fa-users"></i> Users Management</h1>
+                <div class="admin-info">
+                    <div class="admin-avatar">AD</div>
+                    <div>
+                        <div class="admin-name">Admin User</div>
+                        <div class="admin-role">Super Administrator</div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Total Users</h3>
+                        <div class="stat-value">{{ total_users }}</div>
+                    </div>
+                    <div class="stat-icon users">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Total Balance</h3>
+                        <div class="stat-value">${{total_balance}}</div>
+                    </div>
+                    <div class="stat-icon balance">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Active Users</h3>
+                        <div class="stat-value">{{active_users}}</div>
+                    </div>
+                    <div class="stat-icon active">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Today's Activity</h3>
+                        <div class="stat-value">156</div>
+                    </div>
+                    <div class="stat-icon transactions">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Users Table -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h2 class="table-title">All Users</h2>
+                    <div class="search-box">
+                        <input type="text" class="search-input" id="userSearch" placeholder="Search users...">
+                    </div>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Location</th>
+                            <th>Wallet Balance</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for client in clients %}
+                        <tr>
+                            <td>
+                                <div class="user-info">
+                                    <div class="user-avatar">
+                                        {{ client.first_name[0] ~ client.last_name[0] }}
+                                    </div>
+                                    <div>
+                                        <div class="user-name">{{ client.first_name }} {{ client.last_name }}</div>
+                                        <span class="user-email">{{ client.email }}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ client.email }}</td>
+                            <td>{{ client.country if client.country else "N/A" }}</td>
+                            <td class="wallet-balance">${{ "{:,.2f}".format(client.balance) }}</td>
+                            <td>
+                        <button class="add-funds-btn"
+        data-user-id="{{ client.user_id }}"
+        data-user="{{ client.first_name }} {{ client.last_name }}"
+        data-email="{{ client.email }}"
+        data-location="{{ client.country if client.country else 'N/A' }}"
+        data-balance="{{ client.balance }}">
+    <i class="fas fa-plus"></i> Add Funds
+</button>
+
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                
+                        
+                  
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Footer -->
+            <footer>
+                <p>© 2026 Leaner Beam LLC - Admin Dashboard</p>
+                <p style="margin-top: 8px; opacity: 0.8;">Super Administrator Access - All Rights Reserved</p>
+            </footer>
+        </main>
+        
+        <!-- Add Funds Modal -->
+        <div class="modal" id="addFundsModal">
+            <div class="modal-content">
+                <button class="modal-close" id="closeAddFundsModal">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2 class="modal-title"><i class="fas fa-coins"></i> Add Funds to User Wallet</h2>
+                
+                <div class="user-details">
+                    <div class="user-detail-row">
+                        <span class="user-detail-label">User:</span>
+                        <span class="user-detail-value" id="modalUserName">John Doe</span>
+                    </div>
+                    <div class="user-detail-row">
+                        <span class="user-detail-label">Email:</span>
+                        <span class="user-detail-value" id="modalUserEmail">john.doe@example.com</span>
+                    </div>
+                    <div class="user-detail-row">
+                        <span class="user-detail-label">Location:</span>
+                        <span class="user-detail-value" id="modalUserLocation">United States</span>
+                    </div>
+                    <div class="user-detail-row">
+                        <span class="user-detail-label">Current Balance:</span>
+                        <span class="user-detail-value" id="modalUserBalance">$12,487.50</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="addAmount">Amount to Add (USD)</label>
+                    <input type="number" id="addAmount" class="form-control" placeholder="Enter amount" min="1" step="0.01" value="100.00">
+                </div>
+                
+                <div class="form-group">
+                    <label for="addReason">Reason for Adding Funds</label>
+                    <select id="addReason" class="form-control">
+                        <option value="bonus">Account Bonus</option>
+                        <option value="refund">Refund</option>
+                        <option value="promotion">Promotional Credit</option>
+                        <option value="compensation">Compensation</option>
+                        <option value="coupon">Coupon Redemption</option>
+                        <option value="adjustment">Balance Adjustment</option>
+                    </select>
+                </div>
+                
+                <div class="modal-footer">
+                    <button class="modal-btn cancel" id="cancelAddFunds">Cancel</button>
+                    <button class="modal-btn confirm" id="confirmAddFunds">
+                        <i class="fas fa-plus"></i> Add Funds
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/static/js/admin.js">
+
+    </script>
+</body>
+</html>
+

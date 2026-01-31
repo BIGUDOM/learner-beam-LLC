@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Plans - Leaner Beam LLC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/price.css">
+</head>
+<body>
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/18312668653?text=Hello%20I%20am%20interested%20in%20trading" class="whatsapp-btn" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    
+    <!-- Notification -->
+    <div class="notification">
+        <div class="notification-icon">✓</div>
+        <div>
+            <span class="font-medium">Someone from</span>
+            <span class="font-bold" style="color: #2563eb; margin: 0 4px;" id="country">USA</span>
+            <span class="font-medium">just withdrew</span>
+            <span class="font-bold" style="color: #10b981; margin: 0 4px;" id="amount">$700</span>
+        </div>
+    </div>
+    
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">Leaner Beam LLC</div>
+            
+            <button class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav>
+                <ul id="nav-menu">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/service">Service</a></li>
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/pricing" class="active">Price</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                    <li><a href="#legal">Legal</a></li>
+                    <div class="nav-buttons mobile">
+                        <a href="/login" class="btn btn-primary">Login</a>
+                        <a href="/register" class="btn btn-secondary">Register</a>
+                    </div>
+                </ul>
+            </nav>
+            
+            <div class="nav-buttons">
+                <a href="/login" class="btn btn-primary">Login</a>
+                <a href="/register" class="btn btn-secondary">Register</a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Market Ticker -->
+    <div class="market-ticker">
+        <div class="tradingview-widget-container">
+            <iframe src="https://www.tradingview-widget.com/embed-widget/ticker-tape/?locale=en#%7B%22symbols%22%3A%5B%7B%22proName%22%3A%22FOREXCOM%3ASPXUSD%22%2C%22title%22%3A%22S%26P%20500%22%7D%2C%7B%22proName%22%3A%22FOREXCOM%3ANSXUSD%22%2C%22title%22%3A%22Nasdaq%20100%22%7D%2C%7B%22proName%22%3A%22FX_IDC%3AEURUSD%22%2C%22title%22%3A%22EUR%2FUSD%22%7D%2C%7B%22proName%22%3A%22BITSTAMP%3ABTCUSD%22%2C%22title%22%3A%22BTC%2FUSD%22%7D%2C%7B%22proName%22%3A%22BITSTAMP%3AETHUSD%22%2C%22title%22%3A%22ETH%2FUSD%22%7D%5D%2C%22colorTheme%22%3A%22light%22%2C%22isTransparent%22%3Afalse%2C%22displayMode%22%3A%22regular%22%2C%22width%22%3A%22100%25%22%2C%22height%22%3A46%7D" style="width:100%; height:46px; border: none;"></iframe>
+        </div>
+    </div>
+    
+    <!-- Hero Section -->
+    <section class="pricing-hero">
+        <h1>Simple, Transparent Pricing</h1>
+        <p>Choose the perfect plan that fits your trading style and goals. All plans include our powerful trading platform and 24/7 support.</p>
+        <a href="/register" class="btn btn-secondary" style="background: var(--accent-yellow); color: #0f172a; font-weight: 700; padding: 14px 40px; font-size: 1.1rem;">Start Trading Today</a>
+    </section>
+    
+    <!-- Pricing Plans Section -->
+    <section class="pricing-container">
+        <h2 class="section-title">Our Pricing Plans</h2>
+        
+        <div class="pricing-grid">
+            <!-- Basic Plan -->
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div style="font-size: 3rem; margin-bottom: 16px;">✓</div>
+                    <h3 class="pricing-title">Basic</h3>
+                    <div class="pricing-range">$100 - $5,000</div>
+                    <p style="opacity: 0.9; margin-top: 8px;">Perfect for beginners</p>
+                </div>
+                <div class="pricing-features">
+                    <ul>
+                        <li>No Commission Fees</li>
+                        <li>Full access to all instrument types</li>
+                        <li>Access to all trading assets</li>
+                        <li>24/7 live Support</li>
+                        <li>Full access to education centre</li>
+                        <li>Standard withdrawal processing</li>
+                        <li>Email support</li>
+                    </ul>
+                    <a href="/register" class="btn btn-primary" style="width: 100%; display: block; text-align: center; margin-top: 10px;">Get Started</a>
+                </div>
+            </div>
+            
+            <!-- Gold Plan (Featured) -->
+            <div class="pricing-card featured">
+                <div class="pricing-header">
+                    <div style="font-size: 3rem; margin-bottom: 16px;">✓</div>
+                    <h3 class="pricing-title">Gold</h3>
+                    <div class="pricing-range">$10,000 - $99,999</div>
+                    <p style="opacity: 0.9; margin-top: 8px;">Best value for serious traders</p>
+                </div>
+                <div class="pricing-features">
+                    <ul>
+                        <li>No Commission Fees</li>
+                        <li>Full access to all instrument types</li>
+                        <li>Access to all trading assets</li>
+                        <li>24/7 live Support</li>
+                        <li>Full access to education centre</li>
+                        <li>Personal Account Manager</li>
+                        <li>Priority withdrawal processing</li>
+                        <li>Advanced trading signals</li>
+                        <li>Weekly portfolio review</li>
+                    </ul>
+                    <a href="/register" class="btn btn-primary" style="width: 100%; display: block; text-align: center; margin-top: 10px; background: var(--accent-yellow); color: #0f172a;">Get Started</a>
+                </div>
+            </div>
+            
+            <!-- Platinum Plan -->
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div style="font-size: 3rem; margin-bottom: 16px;">✓</div>
+                    <h3 class="pricing-title">Platinum</h3>
+                    <div class="pricing-range">$100,000 - $200,000</div>
+                    <p style="opacity: 0.9; margin-top: 8px;">For professional traders</p>
+                </div>
+                <div class="pricing-features">
+                    <ul>
+                        <li>No Commission Fees</li>
+                        <li>Full access to all instrument types</li>
+                        <li>Access to all trading assets</li>
+                        <li>24/7 live Support</li>
+                        <li>Full access to education centre</li>
+                        <li>Personal Account Manager</li>
+                        <li>Priority Withdrawals</li>
+                        <li>VIP trading signals</li>
+                        <li>Daily portfolio review</li>
+                        <li>Dedicated phone line</li>
+                        <li>Exclusive market insights</li>
+                        <li>Custom trading strategies</li>
+                    </ul>
+                    <a href="/register" class="btn btn-primary" style="width: 100%; display: block; text-align: center; margin-top: 10px;">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Comparison Table -->
+    <section class="pricing-container comparison-section">
+        <h2 class="section-title">Plan Comparison</h2>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Basic</th>
+                    <th>Gold</th>
+                    <th>Platinum</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="feature-name">Minimum Deposit</td>
+                    <td>$100</td>
+                    <td>$10,000</td>
+                    <td>$100,000</td>
+                </tr>
+                <tr>
+                    <td class="feature-name">Maximum Deposit</td>
+                    <td>$5,000</td>
+                    <td>$99,999</td>
+                    <td>$200,000</td>
+                </tr>
+                <tr>
+                    <td class="feature-name">Trading Commission</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                </tr>
+                <tr>
+                    <td class="feature-name">Personal Account Manager</td>
+                    <td class="cross">✗</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                </tr>
+                <tr>
+                    <td class="feature-name">Priority Withdrawals</td>
+                    <td class="cross">✗</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                </tr>
+                <tr>
+                    <td class="feature-name">Advanced Trading Signals</td>
+                    <td class="cross">✗</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                </tr>
+                <tr>
+                    <td class="feature-name">VIP Signals</td>
+                    <td class="cross">✗</td>
+                    <td class="cross">✗</td>
+                    <td class="check">✓</td>
+                </tr>
+                <tr>
+                    <td class="feature-name">Portfolio Reviews</td>
+                    <td>Monthly</td>
+                    <td>Weekly</td>
+                    <td>Daily</td>
+                </tr>
+                <tr>
+                    <td class="feature-name">Dedicated Support Line</td>
+                    <td class="cross">✗</td>
+                    <td class="cross">✗</td>
+                    <td class="check">✓</td>
+                </tr>
+                <tr>
+                    <td class="feature-name">Custom Trading Strategies</td>
+                    <td class="cross">✗</td>
+                    <td class="cross">✗</td>
+                    <td class="check">✓</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    
+    <!-- FAQ Section -->
+    <section class="pricing-container faq-section">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        
+        <div class="faq-item">
+            <div class="faq-question active">
+                What payment methods do you accept?
+                <i class="fas fa-chevron-down faq-toggle active"></i>
+            </div>
+            <div class="faq-answer show">
+                <p>We accept a wide variety of payment methods including credit/debit cards (Visa, Mastercard), bank transfers, and popular e-wallets like Skrill and Neteller. For cryptocurrency deposits, we accept Bitcoin, Ethereum, and USDT.</p>
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question">
+                Are there any hidden fees?
+                <i class="fas fa-chevron-down faq-toggle"></i>
+            </div>
+            <div class="faq-answer">
+                <p>No, we believe in complete transparency. There are no hidden fees or charges. The only fees you'll encounter are the standard spreads on trades, which are clearly displayed on our platform. All our pricing plans have zero commission fees.</p>
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question">
+                Can I change my plan later?
+                <i class="fas fa-chevron-down faq-toggle"></i>
+            </div>
+            <div class="faq-answer">
+                <p>Yes, you can upgrade your plan at any time by making an additional deposit to meet the minimum requirement of the higher tier. Downgrades are also possible when your account balance falls below the current tier's minimum, but we'll notify you before any changes take effect.</p>
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question">
+                How long do withdrawals take?
+                <i class="fas fa-chevron-down faq-toggle"></i>
+            </div>
+            <div class="faq-answer">
+                <p>Withdrawal processing times depend on your account tier. Basic accounts typically process within 3-5 business days, Gold accounts within 1-2 business days, and Platinum accounts enjoy same-day processing for requests submitted before 2 PM EST.</p>
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question">
+                Is my money safe with you?
+                <i class="fas fa-chevron-down faq-toggle"></i>
+            </div>
+            <div class="faq-answer">
+                <p>Absolutely. Client funds are held in segregated accounts with top-tier banks, completely separate from company operational funds. We're regulated by international financial authorities and employ enterprise-grade security including SSL encryption and DDoS protection.</p>
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question">
+                Do you offer a demo account?
+                <i class="fas fa-chevron-down faq-toggle"></i>
+            </div>
+            <div class="faq-answer">
+                <p>Yes, we offer a free demo account with $10,000 in virtual funds so you can practice trading strategies and familiarize yourself with our platform without any risk. The demo account has all the features of a live account and can be accessed immediately after registration.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number" id="transactions">0</div>
+                <div class="stat-label">DAILY TRANSACTIONS</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="accounts">0</div>
+                <div class="stat-label">ACTIVE ACCOUNTS</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="managers">0</div>
+                <div class="stat-label">ACCOUNT MANAGERS</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="clients">0</div>
+                <div class="stat-label">HAPPY CLIENTS</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Ready to Start Your Trading Journey?</h2>
+        <p>Join over 200,000 traders who have already discovered the Leaner Beam LLC difference. Choose the plan that fits your goals and start trading today with our secure, powerful platform.</p>
+        <a href="/register" class="btn btn-secondary" style="background: var(--accent-yellow); color: #0f172a; font-weight: 700; padding: 16px 48px; font-size: 1.2rem; box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.4);">
+            Create Your Account
+        </a>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Risk Warning</h3>
+                <p style="margin-top: 20px; line-height: 1.7; font-size: 0.95rem;">
+                    Trading foreign exchange on margin carries a high level of risk, and may not be suitable for all investors. Before deciding to trade foreign exchange, you should carefully consider your investment objectives, level of experience, and risk appetite. There is a possibility that you may sustain a loss of some or all of your investment and therefore you should not invest money that you cannot afford to lose. You should be aware of all the risks associated with foreign exchange trading, and seek advice from an independent financial advisor if you have any doubts.
+                </p>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/service">Our Services</a></li>
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/pricing">Pricing Plans</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                    <li><a href="/faq">FAQ</a></li>
+                    <li><a href="/trading">Trading Conditions</a></li>
+                    <li><a href="/safety">Safety of Funds</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Contact Us</h3>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div>USA</div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div>leanerbeamllc@cryptoworldapp.com</div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div>+1 (262) 873-0066</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            © Copyright 2026. All Rights Reserved
+        </div>
+    </footer>
+    
+    <script src="/static/js/price.js">
+
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,493 @@
+:root {
+            --primary-blue: #2563eb;
+            --secondary-blue: #1e40af;
+            --accent-green: #10b981;
+            --accent-yellow: #f59e0b;
+            --dark-bg: #0f172a;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1e293b;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+        
+        /* WhatsApp Button */
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 1000;
+            width: 60px;
+            height: 60px;
+            background: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            color: white;
+            font-size: 28px;
+            text-decoration: none;
+            transition: var(--transition);
+            animation: pulse 2s infinite;
+        }
+        
+        .whatsapp-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+        
+        /* Header Styles */
+        header {
+            background: white;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            padding: 16px 4%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            font-weight: 800;
+            font-size: 1.5rem;
+            padding: 8px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            text-decoration: none;
+        }
+        
+        /* Upload Container */
+        .upload-container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .upload-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .upload-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            padding: 32px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .upload-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+            font-weight: 800;
+        }
+        
+        .upload-header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .upload-body {
+            padding: 40px;
+        }
+        
+        .payment-details {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            font-weight: 500;
+            color: #475569;
+        }
+        
+        .detail-value {
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+        
+        .instructions {
+            background: #f0f9ff;
+            border-left: 4px solid var(--primary-blue);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 32px;
+        }
+        
+        .instructions h3 {
+            margin-bottom: 12px;
+            color: var(--dark-bg);
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+            margin-top: 12px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        
+        .file-upload {
+            border: 3px dashed #cbd5e1;
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 24px;
+        }
+        
+        .file-upload:hover {
+            border-color: var(--primary-blue);
+            background: #f0f9ff;
+            transform: translateY(-2px);
+        }
+        
+        .file-upload.drag-over {
+            border-color: var(--accent-green);
+            background: #ecfdf5;
+        }
+        
+        .file-upload i {
+            font-size: 3.5rem;
+            color: var(--primary-blue);
+            margin-bottom: 16px;
+        }
+        
+        .file-upload p {
+            font-size: 1.1rem;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+        
+        .file-upload small {
+            color: #64748b;
+            font-size: 0.9rem;
+            display: block;
+            margin-top: 8px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .preview-container {
+            display: none;
+            margin-top: 24px;
+            text-align: center;
+        }
+        
+        .preview-container.active {
+            display: block;
+        }
+        
+        .preview-title {
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--dark-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 24px;
+            border: 3px solid #e2e8f0;
+        }
+        
+        .preview-actions {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .preview-btn {
+            padding: 10px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .preview-btn.remove {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .preview-btn.remove:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+        
+        .preview-btn.retake {
+            background: var(--primary-blue);
+            color: white;
+        }
+        
+        .preview-btn.retake:hover {
+            background: var(--secondary-blue);
+            transform: translateY(-2px);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .success-message {
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+            color: white;
+            padding: 32px;
+            border-radius: 24px;
+            text-align: center;
+            margin-top: 24px;
+            display: none;
+            box-shadow: 0 4px 25px rgba(16, 185, 129, 0.3);
+        }
+        
+        .success-message.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+        }
+        
+        .success-title {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            font-weight: 800;
+        }
+        
+        .success-text {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 24px;
+        }
+        
+        .dashboard-btn {
+            display: inline-block;
+            background: white;
+            color: var(--primary-blue);
+            padding: 14px 36px;
+            border-radius: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: var(--transition);
+            margin-top: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dashboard-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark-bg);
+            color: #94a3b8;
+            text-align: center;
+            padding: 24px;
+            margin-top: 40px;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .security-badges {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .badge i {
+            font-size: 2rem;
+            color: var(--accent-yellow);
+        }
+        
+        .badge span {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .upload-container {
+                margin: 20px auto;
+            }
+            
+            .upload-body {
+                padding: 28px;
+            }
+            
+            .upload-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .file-upload {
+                padding: 30px 15px;
+            }
+            
+            .file-upload i {
+                font-size: 2.8rem;
+            }
+            
+            .preview-image {
+                max-height: 300px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-container {
+                padding: 16px;
+            }
+            
+            .logo {
+                font-size: 1.3rem;
+                padding: 6px 16px;
+            }
+            
+            .upload-body {
+                padding: 24px;
+            }
+            
+            .upload-header {
+                padding: 24px;
+            }
+            
+            .upload-header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .file-upload {
+                padding: 24px 12px;
+            }
+            
+            .file-upload i {
+                font-size: 2.3rem;
+            }
+            
+            .submit-btn {
+                padding: 16px;
+                font-size: 1.1rem;
+            }
+            
+            .preview-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .preview-btn {
+                width: 100%;
+                max-width: 200px;
+            }
+            
+            .whatsapp-btn {
+                width: 50px;
+                height: 50px;
+                bottom: 16px;
+                left: 16px;
+            }
+        }

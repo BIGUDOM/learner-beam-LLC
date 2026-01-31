@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Leaner Beam LLC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+</head>
+<body>
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/18312668653?text=Hello%20I%20am%20interested%20in%20trading" class="whatsapp-btn" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    
+    <!-- Notification -->
+    <div class="notification">
+        <div class="notification-icon">✓</div>
+        <div>
+            <span class="font-medium">Someone from</span>
+            <span class="font-bold" style="color: #2563eb; margin: 0 4px;" id="country">USA</span>
+            <span class="font-medium">just withdrew</span>
+            <span class="font-bold" style="color: #10b981; margin: 0 4px;" id="amount">$700</span>
+        </div>
+    </div>
+    
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">Leaner Beam LLC</div>
+            
+            <button class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav>
+                <ul id="nav-menu">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/service">Service</a></li>
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/pricing">Price</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                    <li><a href="/legal">Legal</a></li>
+                    <div class="nav-buttons mobile">
+                        <a href="/login" class="btn btn-primary">Login</a>
+                        <a href="/register" class="btn btn-secondary">Register</a>
+                    </div>
+                </ul>
+            </nav>
+            
+            <div class="nav-buttons">
+                <a href="/login" class="btn btn-primary">Login</a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Market Ticker -->
+    <div class="market-ticker">
+        <div class="tradingview-widget-container">
+            <iframe src="https://www.tradingview-widget.com/embed-widget/ticker-tape/?locale=en#%7B%22symbols%22%3A%5B%7B%22proName%22%3A%22FOREXCOM%3ASPXUSD%22%2C%22title%22%3A%22S%26P%20500%22%7D%2C%7B%22proName%22%3A%22FOREXCOM%3ANSXUSD%22%2C%22title%22%3A%22Nasdaq%20100%22%7D%2C%7B%22proName%22%3A%22FX_IDC%3AEURUSD%22%2C%22title%22%3A%22EUR%2FUSD%22%7D%2C%7B%22proName%22%3A%22BITSTAMP%3ABTCUSD%22%2C%22title%22%3A%22BTC%2FUSD%22%7D%2C%7B%22proName%22%3A%22BITSTAMP%3AETHUSD%22%2C%22title%22%3A%22ETH%2FUSD%22%7D%5D%2C%22colorTheme%22%3A%22light%22%2C%22isTransparent%22%3Afalse%2C%22displayMode%22%3A%22regular%22%2C%22width%22%3A%22100%25%22%2C%22height%22%3A46%7D" style="width:100%; height:46px; border: none;"></iframe>
+        </div>
+    </div>
+    
+    <!-- Register Section -->
+    <section class="register-container">
+        <div class="register-card">
+            <div class="register-info">
+                <h1>Join Over 200,000 Traders Worldwide</h1>
+                <p>Start your journey with Leaner Beam LLC and experience secure, profitable trading with our advanced platform and expert support.</p>
+                
+                <ul class="benefits-list">
+                    <li><i class="fas fa-check-circle"></i> <span>Secure & Regulated Trading Environment</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span>24/7 Expert Customer Support</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span>Advanced Trading Tools & Signals</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span>Personal Account Managers</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span>Fast Withdrawals & Deposits</span></li>
+                </ul>
+                
+                <div class="security-badges">
+                    <div class="badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>SSL Encrypted</span>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-lock"></i>
+                        <span>Segregated Funds</span>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-user-check"></i>
+                        <span>Verified Accounts</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="register-form-container" id="user">
+                <div class="success-message" id="successMessage">
+                    <i class="fas fa-check-circle"></i> Registration successful! Please check your email to verify your account.
+                </div>
+                
+                <form id="registerForm" class="register-form">
+                    <h2>Create Your Account</h2>
+                    <p>Fill in the details below to get started with Leaner Beam LLC</p>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" class="form-control" placeholder="Enter your first name" required>
+                            <div class="form-error" id="firstNameError">Please enter your first name</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" class="form-control" placeholder="Enter your last name" required>
+                            <div class="form-error" id="lastNameError">Please enter your last name</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" class="form-control" placeholder="Enter your email address" required>
+                        <div class="form-error" id="emailError">Please enter a valid email address</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" class="form-control" placeholder="+1 (831) 266-8653" required>
+                        <div class="form-error" id="phoneError">Please enter a valid phone number</div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="country">Country/Region</label>
+                            <select id="countryy" class="form-control" required>
+                                <option value="" disabled selected>Select your country</option>
+                                <option value="usa">United States</option>
+                                <option value="uk">United Kingdom</option>
+                                <option value="canada">Canada</option>
+                                <option value="australia">Australia</option>
+                                <option value="germany">Germany</option>
+                                <option value="france">France</option>
+                                <option value="japan">Japan</option>
+                                <option value="china">China</option>
+                                <option value="india">India</option>
+                                <option value="brazil">Brazil</option>
+                                <option value="south-africa">South Africa</option>
+                                <option value="mexico">Mexico</option>
+                                <option value="uae">United Arab Emirates</option>
+                                <option value="singapore">Singapore</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <div class="form-error" id="countryError">Please select your country</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="currency">Preferred Currency</label>
+                            <select id="currency" class="form-control" required>
+                                <option value="" disabled selected>Select currency</option>
+                                <option value="usd" selected>USD - US Dollar</option>
+                                <option value="eur">EUR - Euro</option>
+                                <option value="gbp">GBP - British Pound</option>
+                                <option value="jpy">JPY - Japanese Yen</option>
+                                <option value="aud">AUD - Australian Dollar</option>
+                                <option value="cad">CAD - Canadian Dollar</option>
+                                <option value="chf">CHF - Swiss Franc</option>
+                                <option value="cny">CNY - Chinese Yuan</option>
+                            </select>
+                            <div class="form-error" id="currencyError">Please select a currency</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group password-toggle">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" class="form-control" placeholder="Create a strong password" required>
+                        <button type="button" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <div class="form-error" id="passwordError">Password must be at least 8 characters with letters and numbers</div>
+                    </div>
+                    
+                    <div class="form-group password-toggle">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm your password" required>
+                        <button type="button" id="toggleConfirmPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <div class="form-error" id="confirmPasswordError">Passwords do not match</div>
+                    </div>
+                    
+                    <div class="terms-group">
+                        <input type="checkbox" id="terms" required>
+                        <div class="terms-text">
+                            I agree to the <a href="/legal#terms">Terms & Conditions</a> and <a href="/legal#privacy">Privacy Policy</a> of Leaner Beam LLC. I understand that trading involves substantial risk of loss.
+                        </div>
+                    </div>
+                    <div class="form-error" id="termsError">You must agree to the terms and conditions</div>
+                    
+                    <button type="submit" class="submit-btn" id="submitBtn">Create Account</button>
+                    
+                    <div class="login-link">
+                        Already have an account? <a href="/login">Login here</a>
+                    </div>
+                </form>
+            </div>
+            <div class="register-form-container" id="verify" style="display: none;">
+                <!-- <div class="success-message" id="successMessage">
+                    <i class="fas fa-check-circle"></i> Registration successful! Please check your email to verify your account.
+                </div> -->
+                
+                <form id="VerifyForm" class="register-form">
+                    <h2>Verify Your Account</h2>
+                    <p>Fill in the details below to get started with Leaner Beam LLC</p>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="verificationCode">Verification Code</label>
+                            <input type="text" id="verification_code_input" class="form-control" placeholder="Enter the 6 digit code emailed to you" required>
+                            <div class="form-error" id="CodeError">Please enter code</div>
+                        </div>
+                    </div>
+                    
+           
+
+                    <button type="submit" class="submit-btn" id="verifyButton">Vefrify</button>
+                    
+                    <div class="login-link">
+                        Already have an account? <a href="/login">Login here</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number" id="traders">0</div>
+                <div class="stat-label">ACTIVE TRADERS</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="countries">0</div>
+                <div class="stat-label">COUNTRIES SERVED</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="success">0</div>
+                <div class="stat-label">SUCCESS RATE</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="support">0</div>
+                <div class="stat-label">SUPPORT AGENTS</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Risk Warning</h3>
+                <p style="margin-top: 20px; line-height: 1.7; font-size: 0.95rem;">
+                    Trading foreign exchange on margin carries a high level of risk, and may not be suitable for all investors. Before deciding to trade foreign exchange, you should carefully consider your investment objectives, level of experience, and risk appetite. There is a possibility that you may sustain a loss of some or all of your investment and therefore you should not invest money that you cannot afford to lose. You should be aware of all the risks associated with foreign exchange trading, and seek advice from an independent financial advisor if you have any doubts.
+                </p>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/service">Our Services</a></li>
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/pricing">Pricing Plans</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                    <li><a href="/faq">FAQ</a></li>
+                    <li><a href="/trading">Trading Conditions</a></li>
+                    <li><a href="/safety">Safety of Funds</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Contact Us</h3>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div> USA</div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div>leanerbeamllc@cryptoworldapp.com</div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div>+1 (262) 873-006</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            © Copyright 2026. All Rights Reserved
+        </div>
+    </footer>
+    
+    <script src="{{ url_for('static', filename='js/register.js') }}">
+
+    </script>
+</body>
+</html>
+

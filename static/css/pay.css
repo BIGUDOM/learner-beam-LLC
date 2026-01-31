@@ -1,0 +1,569 @@
+ :root {
+            --primary-blue: #2563eb;
+            --secondary-blue: #1e40af;
+            --accent-green: #10b981;
+            --accent-yellow: #f59e0b;
+            --dark-bg: #0f172a;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1e293b;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+        
+        /* WhatsApp Button */
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 1000;
+            width: 60px;
+            height: 60px;
+            background: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            color: white;
+            font-size: 28px;
+            text-decoration: none;
+            transition: var(--transition);
+            animation: pulse 2s infinite;
+        }
+        
+        .whatsapp-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+        
+        /* Header Styles */
+        header {
+            background: white;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            padding: 16px 4%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            font-weight: 800;
+            font-size: 1.5rem;
+            padding: 8px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            text-decoration: none;
+        }
+        
+        /* Payment Container */
+        .payment-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .payment-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .payment-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            padding: 32px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .payment-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+            font-weight: 800;
+        }
+        
+        .payment-header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .timer {
+            background: rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            padding: 6px 20px;
+            border-radius: 20px;
+            margin-top: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .payment-body {
+            padding: 40px;
+        }
+        
+        .payment-section {
+            margin-bottom: 32px;
+        }
+        
+        .payment-section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--dark-bg);
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        
+        .payment-section-title i {
+            color: var(--primary-blue);
+            font-size: 1.6rem;
+        }
+        
+        .amount-display {
+            text-align: center;
+            margin: 24px 0;
+        }
+        
+        .amount-label {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+        
+        .amount-value {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-green));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 8px 0;
+        }
+        
+        .amount-currency {
+            font-size: 1.1rem;
+            color: #64748b;
+        }
+        
+        .wallet-container {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 28px;
+            text-align: center;
+            border: 2px dashed #cbd5e1;
+            margin: 24px 0;
+        }
+        
+        .wallet-title {
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--dark-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .wallet-address {
+            font-family: 'Courier New', monospace;
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+            word-break: break-all;
+            border: 1px solid #e2e8f0;
+            position: relative;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        
+        .copy-btn:hover {
+            background: var(--secondary-blue);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .copy-btn i {
+            font-size: 0.9rem;
+        }
+        
+        .barcode-container {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 24px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .barcode-placeholder {
+            width: 100%;
+            max-width: 300px;
+            height: 120px;
+            background: url(/static/media/wallet.jpg);
+            border-radius: 8px;
+            margin: 16px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .barcode-placeholder::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 20%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+            animation: scan 2s linear infinite;
+        }
+        
+        @keyframes scan {
+            to { left: 100%; }
+        }
+        
+        .barcode-label {
+            font-weight: 600;
+            margin-top: 12px;
+            color: var(--dark-bg);
+        }
+        
+        .instructions {
+            background: #f0f9ff;
+            border-left: 4px solid var(--primary-blue);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 24px 0;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+            margin-top: 12px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        
+        .payment-footer {
+            padding: 0 40px 40px;
+        }
+        
+        .payment-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+        
+        .payment-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+        }
+        
+        .payment-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .proof-section {
+            display: none;
+            margin-top: 32px;
+            padding-top: 32px;
+            border-top: 2px solid #f1f5f9;
+        }
+        
+        .proof-section.active {
+            display: block;
+        }
+        
+        .file-upload {
+            border: 3px dashed #cbd5e1;
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 24px;
+        }
+        
+        .file-upload:hover {
+            border-color: var(--primary-blue);
+            background: #f0f9ff;
+        }
+        
+        .file-upload i {
+            font-size: 3.5rem;
+            color: var(--primary-blue);
+            margin-bottom: 16px;
+        }
+        
+        .file-upload p {
+            font-size: 1.1rem;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+        
+        .file-upload small {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .preview-container {
+            display: none;
+            margin-top: 24px;
+            text-align: center;
+        }
+        
+        .preview-container.active {
+            display: block;
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 16px;
+        }
+        
+        .submit-proof-btn {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 16px;
+        }
+        
+        .submit-proof-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(37, 99, 235, 0.4);
+        }
+        
+        .success-message {
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+            color: white;
+            padding: 24px;
+            border-radius: 16px;
+            text-align: center;
+            margin-top: 24px;
+            display: none;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .success-message.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark-bg);
+            color: #94a3b8;
+            text-align: center;
+            padding: 24px;
+            margin-top: 40px;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .security-badges {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .badge i {
+            font-size: 2rem;
+            color: var(--accent-yellow);
+        }
+        
+        .badge span {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .payment-container {
+                margin: 20px auto;
+            }
+            
+            .payment-body, .payment-footer {
+                padding: 28px;
+            }
+            
+            .payment-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .amount-value {
+                font-size: 2.8rem;
+            }
+            
+            .barcode-placeholder {
+                height: 100px;
+            }
+            
+            .file-upload {
+                padding: 30px 15px;
+            }
+            
+            .file-upload i {
+                font-size: 2.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-container {
+                padding: 16px;
+            }
+            
+            .logo {
+                font-size: 1.3rem;
+                padding: 6px 16px;
+            }
+            
+            .payment-body, .payment-footer {
+                padding: 24px;
+            }
+            
+            .payment-header {
+                padding: 24px;
+            }
+            
+            .payment-header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .amount-value {
+                font-size: 2.3rem;
+            }
+            
+            .wallet-address {
+                font-size: 1.1rem;
+                padding: 12px;
+            }
+            
+            .barcode-placeholder {
+                height: 80px;
+            }
+            
+            .file-upload {
+                padding: 24px 12px;
+            }
+            
+            .file-upload i {
+                font-size: 2.3rem;
+            }
+            
+            .payment-btn {
+                padding: 16px;
+                font-size: 1.1rem;
+            }
+            
+            .whatsapp-btn {
+                width: 50px;
+                height: 50px;
+                bottom: 16px;
+                left: 16px;
+            }
+        }

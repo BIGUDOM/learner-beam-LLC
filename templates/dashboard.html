@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Leaner Beam LLC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="/static/css/dashboard.css"/>
+</head>
+<body>
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/18312668653?text=Hello%20I%20need%20help%20with%20my%20account" class="whatsapp-btn" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    
+    <!-- Notification -->
+    <div class="notification">
+        <div class="notification-icon">✓</div>
+        <div>
+            <span class="font-medium">Withdrawal processed:</span>
+            <span class="font-bold" style="color: #10b981; margin: 0 4px;" id="amount">$1,250</span>
+            <span class="font-medium">sent to your bank account</span>
+        </div>
+    </div>
+    
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="logo">Leaner Beam LLC</div>
+            
+            <div class="header-actions">
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+                
+                <div class="user-menu" id="userMenu">
+                    <div class="user-avatar">{{ first_name[0] }}{{ last_name[0] }}</div>
+                    <div class="user-info">
+                        <div class="user-name">{{ first_name }} {{ last_name }}</div>
+                        <div class="user-email">{{ email }}</div>
+                    </div>
+                    
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-user"></i> My Profile
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-cog"></i> Account Settings
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-shield-alt"></i> Security
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-question-circle"></i> Support
+                        </a>
+                        <a href="/login" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-chart-line"></i> Trader Dashboard</h3>
+        </div>
+        
+        <nav class="sidebar-menu">
+            <div class="sidebar-item">
+                <a href="#" class="sidebar-link active">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+            </div>
+            <div class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-exchange-alt"></i> Trading
+                </a>
+            </div>
+            <div class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-history"></i> Transaction History
+                </a>
+            </div>
+            <div class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-chart-bar"></i> Performance
+                </a>
+            </div>
+            <div class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-signal"></i> Trade Signals
+                </a>
+            </div>
+            <div class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-wallet"></i> Wallet
+                </a>
+            </div>
+            <div class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-headset"></i> Support
+                </a>
+            </div>
+            <div class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-book"></i> Learning Center
+                </a>
+            </div>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <p>© 2026 Leaner Beam LLC<br>All Rights Reserved</p>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1 class="page-title"><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+        
+        <div class="dashboard-grid">
+            <!-- Balance Card -->
+            <div class="balance-card">
+                <div class="balance-content">
+                    <div class="balance-info">
+                        <h3>Available Balance</h3>
+                        <div class="balance-amount">${{ balance }}</div>
+                        <p style="opacity: 0.9;">Last updated:  {{ last_updated }}</p>
+                    </div>
+                    
+                    <div class="balance-actions">
+                        <button class="balance-btn add" id="addMoneyBtn">
+                            <i class="fas fa-plus"></i> Add Money
+                        </button>
+                        <button class="balance-btn withdraw" id="withdrawBtn">
+                            <i class="fas fa-wallet"></i> Withdraw
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon trades">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                </div>
+                <div class="stat-value">{{ trade_count }}</div>
+                <div class="stat-label">Total Trades</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon profit">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+                <div class="stat-value">${{ total_profit }}</div>
+                <div class="stat-label">Total Profit</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon winrate">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                </div>
+                <div class="stat-value">{{ win_rate }}%</div>
+                <div class="stat-label">Win Rate</div>
+            </div>
+        </div>
+        
+        <!-- Recent Transactions -->
+        <div class="section-header">
+            <h2 class="section-title">Recent Transactions</h2>
+            <a href="#" class="view-all">
+                View All <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        
+        <div class="transactions-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tx in transactions %}
+                    <tr>
+                        <td>{{ tx[4].strftime("%b %d, %Y") }}</td>
+                        <td>{{ tx[2] }}</td>
+                        <td>{{ tx[1] }}</td>
+                        <td class="amount {{ 'positive' if tx[0] > 0 else 'negative' }}">${{ tx[0] }}</td>
+                        <td><span class="status {{ tx[3].lower() }}">{{ tx[3] }}</span></td>
+                    </tr>
+                    {% endfor %}
+                    
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Performance Chart -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <h2 class="chart-title">Portfolio Performance</h2>
+                <div class="chart-period">
+                    <button class="period-btn">7D</button>
+                    <button class="period-btn active">1M</button>
+                    <button class="period-btn">3M</button>
+                    <button class="period-btn">1Y</button>
+                    <button class="period-btn">ALL</button>
+                </div>
+            </div>
+            
+            <div class="chart-placeholder">
+                <div style="position: relative; z-index: 10;">
+                    <i class="fas fa-chart-line" style="font-size: 3rem; margin-bottom: 16px; opacity: 0.3;"></i>
+                    <div style="font-size: 1.1rem; opacity: 0.8;">Trading Performance Chart</div>
+                    <div style="font-size: 2.5rem; font-weight: 800; margin: 16px 0; background: linear-gradient(135deg, var(--primary-blue), var(--accent-green)); -webkit-background-clip: text; background-clip: text; color: transparent;">
+                        +24.8%
+                    </div>
+                    <div style="opacity: 0.7;">Jan 1 - Jan 30, 2026</div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Add Money Modal (Hidden by default) -->
+    <div id="addMoneyModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center;">
+        <div style="background: white; border-radius: 24px; width: 90%; max-width: 500px; padding: 40px; box-shadow: var(--card-shadow); position: relative;">
+            <button id="closeAddMoneyModal" style="position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #64748b;">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 style="font-size: 1.8rem; margin-bottom: 24px; color: var(--dark-bg);">Add Funds to Your Account</h3>
+            <p style="margin-bottom: 32px; color: #475569;">Choose your preferred payment method to deposit funds into your trading account.</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px;">
+                <div style="border: 2px solid #e2e8f0; border-radius: 16px; padding: 20px; text-align: center; cursor: pointer; transition: var(--transition);" class="payment-method">
+                    <i class="fas fa-credit-card" style="font-size: 2.5rem; color: var(--primary-blue); margin-bottom: 12px;"></i>
+                    <div style="font-weight: 600;">Credit/Debit Card</div>
+                </div>
+                <div style="border: 2px solid #e2e8f0; border-radius: 16px; padding: 20px; text-align: center; cursor: pointer; transition: var(--transition);" class="payment-method">
+                    <i class="fas fa-university" style="font-size: 2.5rem; color: var(--primary-blue); margin-bottom: 12px;"></i>
+                    <div style="font-weight: 600;">Bank Transfer</div>
+                </div>
+                <div style="border: 2px solid #e2e8f0; border-radius: 16px; padding: 20px; text-align: center; cursor: pointer; transition: var(--transition);" class="payment-method">
+                    <i class="fas fa-wallet" style="font-size: 2.5rem; color: var(--primary-blue); margin-bottom: 12px;"></i>
+                    <div style="font-weight: 600;">E-Wallet</div>
+                </div>
+                <div style="border: 2px solid #e2e8f0; border-radius: 16px; padding: 20px; text-align: center; cursor: pointer; transition: var(--transition);" class="payment-method">
+                    <i class="fas fa-bitcoin" style="font-size: 2.5rem; color: var(--primary-blue); margin-bottom: 12px;"></i>
+                    <div style="font-weight: 600;">Cryptocurrency</div>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 24px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #334155;">Amount (USD)</label>
+                <input type="number" placeholder="Enter amount" style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px;" min="100" value="1000">
+            </div>
+            
+            <button id="PayBtn" style="width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: var(--transition);">
+                Continue to Payment
+            </button>
+        </div>
+    </div>
+    
+    <!-- Withdraw Modal (Hidden by default) -->
+    <div id="withdrawModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center;">
+        <div style="background: white; border-radius: 24px; width: 90%; max-width: 500px; padding: 40px; box-shadow: var(--card-shadow); position: relative;">
+            <button id="closeWithdrawModal" style="position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #64748b;">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 style="font-size: 1.8rem; margin-bottom: 24px; color: var(--dark-bg);">Withdraw Funds</h3>
+            <p style="margin-bottom: 32px; color: #475569;">Enter the amount you wish to withdraw and select your preferred withdrawal method.</p>
+            
+            <div style="margin-bottom: 24px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #334155;">Amount (USD)</label>
+                <input type="number" id="withdrawAmount" placeholder="Enter amount" style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px;" min="100" value="500">
+                <p style="margin-top: 8px; font-size: 0.9rem; color: #64748b;">Minimum withdrawal: $ • Maximum daily: $10,000</p>
+            </div>
+            
+            <div style="margin-bottom: 24px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #334155;">Withdrawal Method</label>
+                <select style="width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px; appearance: none; background-image: url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2364748b' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E\"); background-repeat: no-repeat; background-position: right 12px center; background-size: 20px;">
+                    <option>Bank Account (***4589)</option>
+                    <option>PayPal (john.doe@example.com)</option>
+                    <option>Credit Card (****1234)</option>
+                    <option>Cryptocurrency Wallet</option>
+                </select>
+            </div>
+            
+            <button id="requestWithdraw" style="width: 100%; padding: 16px; background: linear-gradient(135deg, var(--accent-green), #059669); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: var(--transition);">
+                Request Withdrawal
+            </button>
+        </div>
+    </div>
+    
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
+

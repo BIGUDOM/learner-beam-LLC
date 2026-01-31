@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Confirmation - Leaner Beam LLC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/pay.css">
+</head>
+<body>
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/18312668653?text=Hello%20I%20need%20help%20with%20my%20payment" class="whatsapp-btn" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="/" class="logo">Leaner Beam LLC</a>
+            <div style="font-weight: 500; color: var(--primary-blue);">
+                <i class="fas fa-lock"></i> Secure Payment Page
+            </div>
+        </div>
+    </header>
+    
+    <!-- Payment Container -->
+    <div class="payment-container"   id="paymentContainer">
+        <div class="payment-card" data-amount="{{ amount }}">
+            <div class="payment-header">
+                <h1>Complete Your Payment</h1>
+                <p>Send the exact amount to the wallet address below</p>
+                <div class="timer" id="countdownTimer">15:00 minutes remaining</div>
+            </div>
+            
+            <div class="payment-body">
+                <div class="payment-section">
+                    <div class="payment-section-title">
+                        <i class="fas fa-dollar-sign"></i>
+                        Payment Amount
+                    </div>
+                    
+                    <div class="amount-display">
+                        <div class="amount-label">You need to send</div>
+                        <div class="amount-value">${{ amount }}</div>
+                        <div class="amount-currency">USD (or equivalent in USDT)</div>
+                    </div>
+                </div>
+                
+                <div class="payment-section">
+                    <div class="payment-section-title">
+                        <i class="fas fa-wallet"></i>
+                        Wallet Address
+                    </div>
+                    
+                    <div class="wallet-container">
+                        <div class="wallet-title">
+                            <i class="fab fa-bitcoin"></i>
+                            <span>USDT (TRC20) Wallet Address</span>
+                        </div>
+                        <div class="wallet-address" id="walletAddress">
+                            3PTceSbTZLZ9T6yGWncpRpcz4g643Sp323
+                            <button class="copy-btn" id="copyBtn" aria-label="Copy wallet address">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <p style="color: #64748b; font-size: 0.95rem;">
+                            Please ensure you send USDT via the TRC20 network only. Other networks may result in lost funds.
+                        </p>
+                    </div>
+                    
+                    <div class="barcode-container">
+                        <div class="barcode-label">Scan QR Code to Send Payment</div>
+                        <div class="barcode-placeholder"></div>
+                        <p style="color: #64748b; margin-top: 8px; font-size: 0.9rem;">
+                            QR Code for USDT (TRC20) Wallet
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="payment-section">
+                    <div class="payment-section-title">
+                        <i class="fas fa-info-circle"></i>
+                        Payment Instructions
+                    </div>
+                    
+                    <div class="instructions">
+                        <p><strong>Important:</strong> Please follow these steps carefully to ensure your payment is processed correctly:</p>
+                        <ol>
+                            <li>Send exactly <strong>${{ amount }} USD</strong> (or equivalent in USDT) to the wallet address above</li>
+                            <li>Use <strong>TRC20 network only</strong> for USDT transfers</li>
+                            <li>Keep your transaction ID (TXID) for reference</li>
+                            <li>After sending, click "I Have Made Payment" below and upload a screenshot of your transaction</li>
+                            <li>Our system will verify your payment within 15 minutes</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="payment-footer">
+                <button class="payment-btn" id="paymentBtn">
+                    <i class="fas fa-check-circle"></i> I Have Made Payment
+                </button>
+                
+                <div class="proof-section" id="proofSection">
+                    <div class="payment-section-title">
+                        <i class="fas fa-file-image"></i>
+                        Upload Payment Proof
+                    </div>
+                    
+                    <div class="file-upload" id="dropZone">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag & drop your screenshot here</p>
+                        <p>or</p>
+                        <button class="payment-btn" style="background: var(--primary-blue); width: auto; padding: 10px 24px; margin-top: 8px;">
+                            <i class="fas fa-images"></i> Select File
+                        </button>
+                        <small>Accepted formats: JPG, PNG, GIF (Max 5MB)</small>
+                        <input type="file" id="fileInput" class="file-input" accept="image/*">
+                    </div>
+                    
+                    <div class="preview-container" id="previewContainer">
+                        <img src="" alt="Payment proof preview" class="preview-image" id="imagePreview">
+                        <button class="submit-proof-btn" id="submitProofBtn">
+                            <i class="fas fa-paper-plane"></i> Submit Payment Proof
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="success-message" id="successMessage">
+                    <i class="fas fa-check-circle" style="font-size: 3rem; margin-bottom: 16px;"></i>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 12px;">Payment Proof Submitted!</h3>
+                    <p style="font-size: 1.1rem; opacity: 0.9;">Thank you! Our team is verifying your payment. You'll receive a confirmation email within 15 minutes. Your account will be updated once verified.</p>
+                    <a href="/dashboard" style="display: inline-block; margin-top: 20px; background: white; color: var(--primary-blue); padding: 12px 32px; border-radius: 12px; font-weight: 600; text-decoration: none; transition: var(--transition);">
+                        <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>© 2026 Leaner Beam LLC. All Rights Reserved.</p>
+            <p style="margin: 8px 0; opacity: 0.8;">Your security is our priority. All transactions are encrypted and protected.</p>
+            
+            <div class="security-badges">
+                <div class="badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>SSL Secured</span>
+                </div>
+                <div class="badge">
+                    <i class="fas fa-lock"></i>
+                    <span>Encrypted</span>
+                </div>
+                <div class="badge">
+                    <i class="fas fa-user-check"></i>
+                    <span>Verified</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="/static/js/pay.js">
+ 
+    </script>
+</body>
+</html>
+

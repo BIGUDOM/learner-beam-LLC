@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaner Beam LLC - Secure Forex & Crypto Trading</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/18312668653?text=Hello%20I%20am%20interested%20in%20trading" class="whatsapp-btn" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    
+    <!-- Notification -->
+    <div class="notification">
+        <div class="notification-icon">✓</div>
+        <div>
+            <span class="font-medium">Someone from</span>
+            <span class="font-bold" style="color: #2563eb; margin: 0 4px;" id="country">USA</span>
+            <span class="font-medium">just withdrew</span>
+            <span class="font-bold" style="color: #10b981; margin: 0 4px;" id="amount">$700</span>
+        </div>
+    </div>
+    
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">Leaner Beam LLC</div>
+            
+            <button class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav>
+                <ul id="nav-menu">
+                    <li><a href="#home" class="active">Home</a></li>
+                    <li><a href="#services">Service</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#pricing">Price</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                    <li><a href="#legal">Legal</a></li>
+                    <div class="nav-buttons mobile">
+                        <a href="/login" class="btn btn-primary">Login</a>
+                        <a href="/register" class="btn btn-secondary">Register</a>
+                    </div>
+                </ul>
+            </nav>
+            
+            <div class="nav-buttons">
+                <a href="/login" class="btn btn-primary">Login</a>
+                <a href="/register" class="btn btn-secondary">Register</a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Market Ticker -->
+    <div class="market-ticker">
+        <div class="tradingview-widget-container">
+            <iframe src="https://www.tradingview-widget.com/embed-widget/ticker-tape/?locale=en#%7B%22symbols%22%3A%5B%7B%22proName%22%3A%22FOREXCOM%3ASPXUSD%22%2C%22title%22%3A%22S%26P%20500%22%7D%2C%7B%22proName%22%3A%22FOREXCOM%3ANSXUSD%22%2C%22title%22%3A%22Nasdaq%20100%22%7D%2C%7B%22proName%22%3A%22FX_IDC%3AEURUSD%22%2C%22title%22%3A%22EUR%2FUSD%22%7D%2C%7B%22proName%22%3A%22BITSTAMP%3ABTCUSD%22%2C%22title%22%3A%22BTC%2FUSD%22%7D%2C%7B%22proName%22%3A%22BITSTAMP%3AETHUSD%22%2C%22title%22%3A%22ETH%2FUSD%22%7D%5D%2C%22colorTheme%22%3A%22light%22%2C%22isTransparent%22%3Afalse%2C%22displayMode%22%3A%22regular%22%2C%22width%22%3A%22100%25%22%2C%22height%22%3A46%7D" style="width:100%; height:46px; border: none;"></iframe>
+        </div>
+    </div>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="slide active" style="background-image: url('https://placehold.co/1920x1080/1e3a8a/white?text=Trading+Platform')">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+                <h3>Welcome to Leaner Beam LLC</h3>
+                <h1>Secured & Easy Way To Trade <span>Forex & Crypto</span></h1>
+                <div class="hero-buttons">
+                    <a href="/register" class="btn btn-secondary">Signup</a>
+                    <a href="/login" class="btn btn-primary">Login</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide" style="background-image: url('https://placehold.co/1920x1080/0c4a6e/white?text=Financial+Markets')">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+                <h3>Leaner Beam LLC</h3>
+                <h1>has exactly what you need to <span>trade the world's financial markets</span> with confidence</h1>
+                <div class="hero-buttons">
+                    <a href="/register" class="btn btn-secondary">Signup</a>
+                    <a href="/login" class="btn btn-primary">Login</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide" style="background-image: url('https://placehold.co/1920x1080/0f766e/white?text=Trading+Community')">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+                <h3>Join Over 200,000 Traders</h3>
+                <h1>Who trade <span>forex and crypto</span> using our advance tools</h1>
+                <div class="hero-buttons">
+                    <a href="/register" class="btn btn-secondary">Signup</a>
+                    <a href="/login" class="btn btn-primary">Login</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="carousel-arrow prev" id="prev-slide">
+            <i class="fas fa-chevron-left"></i>
+        </div>
+        <div class="carousel-arrow next" id="next-slide">
+            <i class="fas fa-chevron-right"></i>
+        </div>
+        
+        <div class="carousel-controls">
+            <div class="carousel-dot active" data-slide="0"></div>
+            <div class="carousel-dot" data-slide="1"></div>
+            <div class="carousel-dot" data-slide="2"></div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section id="features">
+        <h2 class="section-title">Our Features</h2>
+        <p class="section-subtitle">We provide cutting-edge trading tools with top-tier security to ensure your investments are always protected</p>
+        
+        <div class="features-grid">
+            <div class="chart-container">
+                <iframe src="https://www.tradingview-widget.com/embed-widget/advanced-chart/?locale=en#%7B%22autosize%22%3Atrue%2C%22symbol%22%3A%22NASDAQ%3AAAPL%22%2C%22interval%22%3A%221%22%2C%22timezone%22%3A%22Etc%2FUTC%22%2C%22theme%22%3A%22light%22%2C%22style%22%3A%221%22%2C%22hide_top_toolbar%22%3Afalse%2C%22hide_side_toolbar%22%3Afalse%2C%22allow_symbol_change%22%3Atrue%2C%22save_image%22%3Afalse%2C%22studies%22%3A%5B%22MASimple%40tv-basicstudies%22%5D%7D" style="width:100%; height:100%; border: none;"></iframe>
+            </div>
+            
+            <div>
+                <div class="security-item">
+                    <div class="security-icon">🔒</div>
+                    <div class="security-content">
+                        <h3>Regulation & Funds</h3>
+                        <p>Client funds are held in segregated accounts for maximum protection.</p>
+                    </div>
+                </div>
+                
+                <div class="security-item">
+                    <div class="security-icon">✅</div>
+                    <div class="security-content">
+                        <h3>Account Verification</h3>
+                        <p>Identity verification ensures only authorized transactions occur.</p>
+                    </div>
+                </div>
+                
+                <div class="security-item">
+                    <div class="security-icon">🛡️</div>
+                    <div class="security-content">
+                        <h3>DDoS & SSL Protection</h3>
+                        <p>Enterprise-grade DDoS protection and Comodo SSL encryption.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Why Choose Us Section -->
+    <section id="about" style="background-color: #f1f5f9;">
+        <h2 class="section-title">Why Choose Us</h2>
+        <p class="section-subtitle">We're constantly updating our trading system to aid more accuracy, sustainability and giving you the best is our major priority</p>
+        
+        <div class="why-choose-grid">
+            <div>
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span>STRATEGY & ANALYSIS</span>
+                        <span class="progress-value">87%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" data-width="87"></div>
+                    </div>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span>WITHDRAWAL EFFICIENCY</span>
+                        <span class="progress-value">96%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" data-width="96"></div>
+                    </div>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span>ACHIEVES GOALS</span>
+                        <span class="progress-value">70%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" data-width="70"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <div class="tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" data-tab="tab1">Financial Market</button>
+                        <button class="tab-btn" data-tab="tab2">Trading Comfort</button>
+                        <button class="tab-btn" data-tab="tab3">Best Care</button>
+                    </div>
+                </div>
+                
+                <div class="tab-content active" id="tab1">
+                    <h3 style="font-size: 1.8rem; font-weight: 700; margin-bottom: 20px;">Access the financial markets all in one place</h3>
+                    <p style="font-weight: 600; margin-bottom: 16px;">Forget about complicated platforms! Start using our simple & success-geared platform to trade the world's biggest assets like EUR, USD.</p>
+                    <p>Trade Forex/CFDs all on our advanced, web-based trading platform designed with you, the user in mind. With our platform, you can trade on the largest lists of assets in the industry. From Currency pairs, and Commodities to stocks and indices, we have it all.</p>
+                </div>
+                
+                <div class="tab-content" id="tab2">
+                    <h3 style="font-size: 1.8rem; font-weight: 700; margin-bottom: 20px;">Our multiple option Trading services</h3>
+                    <p>You are unlikely to find a more comfortable Forex broker than Leaner Beam LLC. Our company provides Forex customers the best possible conditions for successful Forex trading as well as Binary and Crypto Trades. We have offers for both beginners and experienced traders. There are also many different bonuses, which are designed to help any trader in his profitable trading. The main engines of our progress at the financial trading market are spotless reputation; focus on customers and innovative approach to business development. Our achievements have been confirmed by the successes of every one of our traders.</p>
+                </div>
+                
+                <div class="tab-content" id="tab3">
+                    <h3 style="font-size: 1.8rem; font-weight: 700; margin-bottom: 20px;">Providing best care</h3>
+                    <p>We strive to build a relationship of trust with every client, for the long-term, 70% of our work is for clients that we have served for over 10 years.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Services Section -->
+    <section id="services" style="background-color: #f8fafc;">
+        <h2 class="section-title">Our Services</h2>
+        <p class="section-subtitle">With over 2,000,000 clients since it was founded in 2011, Leaner Beam LLC has grown to a well established international Trading and investment firm</p>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-img" style="background-image: url('https://placehold.co/300x200/3b82f6/white?text=Trading');"></div>
+                <div class="service-content">
+                    <h3>Easy Forex Trading</h3>
+                    <p>Easy access for Beginners & experienced traders. Forex traders are aware of their profits in advance — their main objective is to select the correct direction of the market movement.</p>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-img" style="background-image: url('https://placehold.co/300x200/10b981/white?text=Planning');"></div>
+                <div class="service-content">
+                    <h3>Proper Planning</h3>
+                    <p>Realtime Analysis & Proper planning, Watch asset's value in real time monitoring platform and decide when to trade in.</p>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-img" style="background-image: url('https://placehold.co/300x200/8b5cf6/white?text=Signals');"></div>
+                <div class="service-content">
+                    <h3>Good Signals</h3>
+                    <p>High returns with our best trade signals.</p>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-img" style="background-image: url('https://placehold.co/300x200/ef4444/white?text=Support');"></div>
+                <div class="service-content">
+                    <h3>24/7 Support</h3>
+                    <p>You can communicate with our support team at any time through the website chat support or You can contact us by sending an email.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Pricing Section -->
+    <section id="pricing">
+        <h2 class="section-title">Our Pricing</h2>
+        
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div style="font-size: 3rem; margin-bottom: 16px;">✓</div>
+                    <h3 class="pricing-title">Basic</h3>
+                    <div class="pricing-range">$100 - $5,000</div>
+                </div>
+                <div class="pricing-features">
+                    <ul>
+                        <li>No Commission</li>
+                        <li>Full access to all instrument types</li>
+                        <li>Access to all trading assets</li>
+                        <li>24/7 live Support</li>
+                        <li>Full access to education centre</li>
+                    </ul>
+                    <a href="/login" class="btn btn-primary" style="width: 100%; display: block; text-align: center; margin-top: 10px;">Get Started</a>
+                </div>
+            </div>
+            
+            <div class="pricing-card featured">
+                <div class="pricing-header">
+                    <div style="font-size: 3rem; margin-bottom: 16px;">✓</div>
+                    <h3 class="pricing-title">Gold</h3>
+                    <div class="pricing-range">$10,000 - $99,999</div>
+                </div>
+                <div class="pricing-features">
+                    <ul>
+                        <li>No Commission</li>
+                        <li>Full access to all instrument types</li>
+                        <li>Access to all trading assets</li>
+                        <li>24/7 live Support</li>
+                        <li>Full access to education centre</li>
+                        <li>Personal Account Manager</li>
+                    </ul>
+                    <a href="/login" class="btn btn-primary" style="width: 100%; display: block; text-align: center; margin-top: 10px;">Get Started</a>
+                </div>
+            </div>
+            
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div style="font-size: 3rem; margin-bottom: 16px;">✓</div>
+                    <h3 class="pricing-title">Platinum</h3>
+                    <div class="pricing-range">$100,000 - $200,000</div>
+                </div>
+                <div class="pricing-features">
+                    <ul>
+                        <li>No Commission</li>
+                        <li>Full access to all instrument types</li>
+                        <li>Access to all trading assets</li>
+                        <li>24/7 live Support</li>
+                        <li>Full access to education centre</li>
+                        <li>Personal Account Manager</li>
+                        <li>Priority Withdrawals</li>
+                    </ul>
+                    <a href="/login" class="btn btn-primary" style="width: 100%; display: block; text-align: center; margin-top: 10px;">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stats-content">
+                <h2>It's time to make your <br> money work for you</h2>
+                <p>Most trading platforms have a high-risk area where you can either double or even triple your capital and then lose it in few minutes. Leaner Beam LLC have several advantages that make it possible to get more profit with little or no risk.</p>
+                <p>Opportunities arise daily and are numerous, and we provide you with the means to connect from one to the other</p>
+                <p>Whether you're new to the markets or a professional, dedicated customer support is an integral part of a successful trading experience; if you have questions, comments or concerns, our local staff is on-hand to answer all your needs.</p>
+                <a href="/login" class="btn btn-secondary" style="margin-top: 24px; background: var(--accent-yellow); color: #0f172a; font-weight: 700;">Start Now</a>
+            </div>
+            
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-number" id="transactions">0</div>
+                    <div class="stat-label">DAILY TRANSACTIONS</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="accounts">0</div>
+                    <div class="stat-label">ACTIVE ACCOUNTS</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="managers">0</div>
+                    <div class="stat-label">ACCOUNT MANAGERS</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="clients">0</div>
+                    <div class="stat-label">HAPPY CLIENTS</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials & FAQ -->
+    <section style="background-color: #f8fafc; padding-bottom: 120px;">
+        <div class="testimonials-faq-grid">
+            <div>
+                <h2 class="section-title" style="left: 0; transform: none; margin-bottom: 40px;">What Clients Say</h2>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p class="testimonial-text" id="testimonial-text">"Very great work, made very huge amount of money with little or no effort at all. Special thanks to your automated trading device."</p>
+                        <div class="testimonial-author">
+                            <div class="author-img">AP</div>
+                            <div class="author-info">
+                                <h4 id="testimonial-author">Austin Paul</h4>
+                                <p id="testimonial-role">Silver Package Trader</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-dots">
+                    <div class="testimonial-dot active" data-index="0"></div>
+                    <div class="testimonial-dot" data-index="1"></div>
+                    <div class="testimonial-dot" data-index="2"></div>
+                    <div class="testimonial-dot" data-index="3"></div>
+                    <div class="testimonial-dot" data-index="4"></div>
+                    <div class="testimonial-dot" data-index="5"></div>
+                    <div class="testimonial-dot" data-index="6"></div>
+                </div>
+            </div>
+            
+            <div>
+                <h2 class="section-title" style="left: 0; transform: none; margin-bottom: 40px;">Answers & Questions</h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question active">
+                        How secure is trading with you?
+                        <i class="fas fa-chevron-down faq-toggle active"></i>
+                    </div>
+                    <div class="faq-answer show">
+                        <p>We take all possible measures to ensure your utmost security. We use the internationally accepted security system SSL (Secure Sockets Layer) that encrypts all credit card payments over the web. This system is automatic, and you will receive instant notification if your browser does not support it.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What currency can I use for trading?
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>You can open an account in USD, EUR or GBP. Please note that you cannot change your currency selection after registration.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Do I have to deposit money for registration?
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>No. A deposit is not required and no credit/debit card details are required in order to register for this site. However, you will have to deposit money to start trading.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Are payouts taxable?
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Leaner Beam LLC traders are responsible for their taxation liabilities, if any, at their place of residence. See our general terms for more details.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        I have problems with the registration process. What should I do?
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our team at Leaner Beam LLC is here for you! You can contact us via live chat, request a call-back, or email support@leanerbeam.com</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How can I register?
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Registering at Leaner Beam LLC is extremely simple:</p>
+                        <p>1. Click on "Sign Up" on the home page.</p>
+                        <p>2. Fill in the mandatory details.</p>
+                        <p>3. Submit the form.</p>
+                        <p>4. Log in to your account.</p>
+                        <p>5. Deposit and start trading</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What is the registration fee?
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>There is no registration fee.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Risk Warning</h3>
+                <p style="margin-top: 20px; line-height: 1.7; font-size: 0.95rem;">
+                    Trading foreign exchange on margin carries a high level of risk, and may not be suitable for all investors. Before deciding to trade foreign exchange, you should carefully consider your investment objectives, level of experience, and risk appetite. There is a possibility that you may sustain a loss of some or all of your investment and therefore you should not invest money that you cannot afford to lose. You should be aware of all the risks associated with foreign exchange trading, and seek advice from an independent financial advisor if you have any doubts.
+                </p>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Services</h3>
+                <ul class="footer-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#">Account Type</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Trading Conditions</a></li>
+                    <li><a href="#">Safety of Funds</a></li>
+                    <li><a href="#">Risk Warning</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms And Conditions</a></li>
+                    <li><a href="#">Licences And Regulation</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Contact Us</h3>
+                 <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div>USA</div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div>leanerbeamllc@cryptoworldapp.com</div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div>+1 (262) 873-0066</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            © Copyright 2026. All Rights Reserved
+        </div>
+    </footer>
+    
+    <script src="{{ url_for('static', filename='js/index.js') }}">
+    </script>
+</body>
+</html>
+

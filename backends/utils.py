@@ -8,6 +8,9 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 import smtplib
 import traceback
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def login_required(view):
     @wraps(view)
@@ -26,8 +29,8 @@ def load_config() -> dict:
         template = {
             "smtp_server": "smtp.gmail.com",
             "smtp_port": 587,
-            "sender_email": "codis1723@gmail.com",
-            "sender_password": "hkdzlilwcqbbvmjo",
+            "sender_email": os.getenv("EMAIL_USER"),
+            "sender_password": os.getenv("EMAIL_PASSWORD"),
             "admin_code": "admin123"
         }
         try:
@@ -46,8 +49,8 @@ def load_config() -> dict:
     fixed_cfg = {
         "smtp_server": cfg.get("smtp_server", "smtp.gmail.com"),
         "smtp_port": cfg.get("smtp_port", 587),
-        "sender_email": cfg.get("sender_email", "codis1723@gmail.com"),
-        "sender_password": cfg.get("sender_password", "hkdzlilwcqbbvmjo"),
+        "sender_email": cfg.get("sender_email",  os.getenv("EMAIL_USER")),
+        "sender_password": cfg.get("sender_password",os.getenv("EMAIL_PASSWORD")),
         "admin_code": cfg.get("admin_code", "admin123")
     }
 

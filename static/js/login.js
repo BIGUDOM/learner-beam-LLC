@@ -106,16 +106,9 @@ loginForm.addEventListener('submit', async function(e) {
 
         // --- Always get raw text first ---
         const raw = await response.text();
-        data = JSON.parse(raw);
+        const data = JSON.parse(raw);
 
-        try {
-        } catch (parseError) {
-            console.error("Failed to parse JSON from server:", parseError);
-            console.error("RAW RESPONSE:", raw);
-            showErrorModal("Server error occurred. Please try again later.");
-            clearLoading(loginBtn);
-            return;
-        }
+    
 
         console.log("Login response:", data);
         clearLoading(loginBtn);
@@ -502,5 +495,6 @@ function clearLoading(button) {
     button.innerHTML = button.dataset.originalText || "Submit";
     button.disabled = false;
 }
+
 
 

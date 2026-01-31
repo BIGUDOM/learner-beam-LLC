@@ -176,8 +176,7 @@ def payment(amount):
 
 @app.route("/admin")
 def admin_dashboard():
-    if not session.get("admin_id"):
-        return redirect("/admin/login")
+ 
 
     db = get_db()
     cursor = db.cursor()
@@ -1335,6 +1334,7 @@ def request_withdraw():
 if __name__ == "__main__":      
 
     app.run()
+
 
 
 

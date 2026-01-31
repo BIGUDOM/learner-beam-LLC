@@ -92,6 +92,8 @@ loginForm.addEventListener('submit', async function(e) {
 
     const loginBtn = document.getElementById("submitBtn");
     setLoading(loginBtn, "Logging in...");
+    let raw;   // 👈 define it FIRST
+    let data;
 
     const payload = { email, password };
 
@@ -103,7 +105,6 @@ loginForm.addEventListener('submit', async function(e) {
         });
 
         const text = await response.text(); // ALWAYS safe
-        let data;
         data = JSON.parse(raw);
 
         clearLoading(loginBtn);

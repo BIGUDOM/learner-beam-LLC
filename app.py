@@ -291,7 +291,7 @@ def verify_register():
 
         # Send verification email safely
         try:
-            send_email(
+            send_email_async(
                 email,
                 "Welcome to Leaner Beam LLC - Verify Your Account",
                 f"Here's your verification code: {verification_code}\nPlease don't share with anyone",
@@ -445,7 +445,7 @@ def verify_email():
     """
 
         try:
-            send_email(
+            send_email_async(
                 email,
                 "Welcome to Leaner Beam LLC  🎉",
                 welcome_message,
@@ -773,7 +773,7 @@ def reset():
 </body>
 """
 
-        send_email(
+        send_email_async(
             recipient=email,
             subject="Leaner Beam LLC - Password Reset Code",
             body=reset_password_html,
@@ -888,7 +888,7 @@ def save_password():
 </body>
 """
         try:
-            send_email(
+            send_email_async(
                 recipient=email,
                 subject="Leaner Beam LLC - Password Reset Successful",
                 body=password_reset_email,
@@ -995,7 +995,7 @@ def upload_proof():
     try:
         # Send to admin
         admin_email = "dondennisdarty116@gmail.com"
-        send_email(
+        send_email_async(
             admin_email,
             "New Deposit Proof Uploaded",
             f"User ID: {user_id} uploaded deposit proof for amount: {amount}",
@@ -1113,7 +1113,7 @@ def upload_proof():
 
 
         """
-        send_email(
+        send_email_async(
             email,
             "Leaner Beam LLC - Deposit Successful",
             deposit_html,
@@ -1243,7 +1243,7 @@ def admin_add_funds():
             INSERT INTO TRANSACTION_BASE (user_id, amount, transaction_type, description, status, created_at)
             VALUES (%s, %s, %s, %s, %s, NOW())
             """,
-            (user_id, amount, 'DEPOSIT', reason, 'COMPLETED')
+            (user_id, amount, 'TRADE PROFIT', reason, 'COMPLETED')
         )
 
         conn.commit()
@@ -1329,6 +1329,7 @@ def request_withdraw():
 if __name__ == "__main__":      
 
     app.run()
+
 
 
 

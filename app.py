@@ -708,6 +708,11 @@ def verifylogin():
             "status": "error",
             "message": f"Login failed: {str(e)}"
         }), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
 
 @app.route("/resetpass", methods=["POST"])
 def reset():

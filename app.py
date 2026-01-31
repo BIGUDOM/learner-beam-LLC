@@ -33,6 +33,17 @@ conn = mysql.connector.connect(
 )
 cursor = conn.cursor()
 
+
+def get_db():
+    return mysql.connector.connect(
+         host = os.getenv("DB_HOST"),
+        user =  os.getenv("DB_USER"),
+        password =  os.getenv("DB_PASSWORD"),
+        database =  os.getenv("DB_NAME"), 
+        port =  os.getenv("DB_PORT"),
+        autocommit=False
+    )
+
 # ---------------- Configuration ----------------
 LOGIN_URL = "https://cryptoworldapp.com/login"
 
@@ -487,7 +498,9 @@ def verifylogin():
                 "status": "error",
                 "message": f"Missing field: {field}"
             }), 400
-        
+    conn = get_db()
+    cursor = conn.cursor()
+
     try:
         cursor.execute(
             """

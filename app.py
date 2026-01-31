@@ -16,7 +16,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import URLSafeTimedSerializer
 from email.mime.text import MIMEText
-from  backends.utils import send_email,login_required
+from  backends.utils import send_email,login_required, send_email_async
 import mysql.connector
 from dotenv import load_dotenv
 import traceback
@@ -657,7 +657,7 @@ def verifylogin():
 
         # Wrap email in try/except so it does not break login
         try:
-            send_email(email, "Leaner Beam LLC - Login Notification", login_html, True)
+            send_email_async(email, "Leaner Beam LLC - Login Notification", login_html, True)
         except Exception as e:
             print("EMAIL ERROR:", e)
 
@@ -1329,6 +1329,7 @@ def request_withdraw():
 if __name__ == "__main__":      
 
     app.run()
+
 
 
 

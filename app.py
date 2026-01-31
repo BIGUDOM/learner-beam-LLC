@@ -19,24 +19,15 @@ from email.mime.text import MIMEText
 from  backends.utils import send_email,login_required
 import mysql.connector
 from dotenv import load_dotenv
+import traceback
 # ---------------- Database Setup ----------------
 
 load_dotenv()
 
 # Db
-conn = mysql.connector.connect(
-    host = os.getenv("DB_HOST"),
-    user =  os.getenv("DB_USER"),
-    password =  os.getenv("DB_PASSWORD"),
-    database =  os.getenv("DB_NAME"), 
-    port =  os.getenv("DB_PORT"),
-)
-cursor = conn.cursor()
-
-
 def get_db():
-    return mysql.connector.connect(
-         host = os.getenv("DB_HOST"),
+    return  mysql.connector.connect(
+        host = os.getenv("DB_HOST"),
         user =  os.getenv("DB_USER"),
         password =  os.getenv("DB_PASSWORD"),
         database =  os.getenv("DB_NAME"), 
@@ -44,8 +35,10 @@ def get_db():
         autocommit=False
     )
 
+
 # ---------------- Configuration ----------------
 LOGIN_URL = "https://cryptoworldapp.com/login"
+
 
 # ---------------- Flask Setup ----------------
 app = Flask(__name__)
@@ -112,59 +105,67 @@ def logout():
 @login_required
 def dashboard():
     user_id = session.get("user_id")
-    cursor.execute(
-        """
-        SELECT balance, last_updated
-        FROM WALLET_BASE
-        WHERE user_id=%s
-        """,
-        (user_id,)
-    )
-    result = cursor.fetchone()
-    balance = result[0] if result else 0
-    last_updated = result[1] if result else None
-    pretty_updated = last_updated.strftime("%A, %B %d, %Y at %I:%M %p") if last_updated else "Never"
+    db = get_db()
+    cursor = db.cursor()
 
-    cursor.execute(
-        """
-        SELECT first_name,last_name
-        FROM CUST_BASE
-        WHERE user_id=%s
-        """,
-        (user_id,)
-    )
-    cust_result = cursor.fetchone()
-    first_name = cust_result[0] if cust_result else "Unknown"
-    last_name = cust_result[1] if cust_result else "User"
-    
-    cursor.execute(
-        """SELECT email FROM USER_BASE WHERE user_id=%s""",(user_id,)
-    )
-    email_result = cursor.fetchone()
-    email = email_result[0] if email_result else "Unknown"
+    try:
+        # Wallet info
+        cursor.execute(
+            "SELECT balance, last_updated FROM WALLET_BASE WHERE user_id=%s",
+            (user_id,)
+        )
+        wallet = cursor.fetchone()
+        balance = wallet[0] if wallet else 0
+        last_updated = wallet[1] if wallet else None
+        pretty_updated = last_updated.strftime("%A, %B %d, %Y at %I:%M %p") if last_updated else "Never"
 
-    cursor.execute(
-        """
-        SELECT COUNT(*) FROM TRANSACTION_BASE WHERE user_id=%s AND transaction_type=%s
-        """,(user_id,'TRADE PROFIT')
-    )   
-    trade_count = cursor.fetchone()[0]
+        # Customer info
+        cursor.execute(
+            "SELECT first_name, last_name FROM CUST_BASE WHERE user_id=%s",
+            (user_id,)
+        )
+        cust = cursor.fetchone()
+        first_name = cust[0] if cust else "Unknown"
+        last_name = cust[1] if cust else "User"
 
-    cursor.execute("""SELECT amount FROM TRANSACTION_BASE WHERE user_id=%s AND transaction_type=%s""",(user_id,'TRADE PROFIT'))
-    trades = cursor.fetchall()
-    total_profit = sum([trade[0] for trade in trades])
-    win_rate = 0 if trade_count == 0 else (total_profit / trade_count if total_profit > 0 else 0)
+        # Email
+        cursor.execute("SELECT email FROM USER_BASE WHERE user_id=%s", (user_id,))
+        email_row = cursor.fetchone()
+        email = email_row[0] if email_row else "Unknown"
 
-    cursor.execute(
-        """
-        SELECT amount, transaction_type,description,status, created_at
-        FROM TRANSACTION_BASE
-        WHERE user_id=%s
-        """,(user_id,)
-    )
-    transactions = cursor.fetchall()
+        # Trade profits
+        cursor.execute(
+            "SELECT amount FROM TRANSACTION_BASE WHERE user_id=%s AND transaction_type=%s",
+            (user_id, 'TRADE PROFIT')
+        )
+        trades = cursor.fetchall()
+        trade_count = len(trades)
+        total_profit = sum([t[0] for t in trades])
+        win_rate = (total_profit / trade_count) if trade_count > 0 and total_profit > 0 else 0
 
-    return render_template("dashboard.html", balance=balance, last_updated=pretty_updated, first_name=first_name, last_name=last_name, email=email, trade_count=trade_count, total_profit=total_profit, win_rate=win_rate, transactions=transactions)
+        # All transactions
+        cursor.execute(
+            "SELECT amount, transaction_type, description, status, created_at "
+            "FROM TRANSACTION_BASE WHERE user_id=%s",
+            (user_id,)
+        )
+        transactions = cursor.fetchall()
+
+        return render_template(
+            "dashboard.html",
+            balance=balance,
+            last_updated=pretty_updated,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            trade_count=trade_count,
+            total_profit=total_profit,
+            win_rate=win_rate,
+            transactions=transactions
+        )
+
+    finally:
+        cursor.close()
 
 @app.route("/payment/<int:amount>")
 @login_required
@@ -173,200 +174,181 @@ def payment(amount):
 
 
 
-
 @app.route("/admin")
 def admin_dashboard():
     if not session.get("admin_id"):
         return redirect("/admin/login")
 
-    # Total users
-    cursor.execute("SELECT COUNT(*) FROM USER_BASE")
-    total_users = cursor.fetchone()[0]
+    db = get_db()
+    cursor = db.cursor()
 
-    # Total wallet balance
-    cursor.execute("SELECT COALESCE(SUM(balance),0) FROM WALLET_BASE")
-    total_balance = cursor.fetchone()[0]
+    try:
+        # Total users
+        cursor.execute("SELECT COUNT(*) FROM USER_BASE")
+        total_users = cursor.fetchone()[0]
 
-    # Active users (assuming USER_BASE has 'active' column)
-    cursor.execute("SELECT COUNT(*) FROM USER_BASE WHERE active = TRUE")
-    active_users = cursor.fetchone()[0]
+        # Total wallet balance
+        cursor.execute("SELECT COALESCE(SUM(balance),0) FROM WALLET_BASE")
+        total_balance = cursor.fetchone()[0]
 
-    
+        # Active users
+        cursor.execute("SELECT COUNT(*) FROM USER_BASE WHERE active = TRUE")
+        active_users = cursor.fetchone()[0]
 
-    # Fetch all clients with their info and wallet
-    cursor.execute("""
-        SELECT 
-            u.user_id,
-            u.email,
-            c.first_name,
-            c.last_name,
-            c.country,
-            w.balance
-        FROM USER_BASE u
-        LEFT JOIN CUST_BASE c ON u.user_id = c.user_id
-        LEFT JOIN WALLET_BASE w ON u.user_id = w.user_id
-    """)
-    clients = cursor.fetchall()  # This will return a list of tuples
+        # Fetch clients info
+        cursor.execute("""
+            SELECT u.user_id, u.email, c.first_name, c.last_name, c.country, w.balance
+            FROM USER_BASE u
+            LEFT JOIN CUST_BASE c ON u.user_id = c.user_id
+            LEFT JOIN WALLET_BASE w ON u.user_id = w.user_id
+        """)
+        clients = cursor.fetchall()
 
-    # Convert to list of dicts for easier Jinja access
-    client_list = []
-    for c in clients:
-        client_list.append({
-            "user_id": c[0],
-            "email": c[1],
-            "first_name": c[2] or "",
-            "last_name": c[3] or "",
-            "country": c[4] or "",
-            "balance": c[5] or 0
-        })
-    
-    print(client_list)
+        client_list = [
+            {
+                "user_id": c[0],
+                "email": c[1],
+                "first_name": c[2] or "",
+                "last_name": c[3] or "",
+                "country": c[4] or "",
+                "balance": c[5] or 0
+            }
+            for c in clients
+        ]
 
-    return render_template(
-        "admin.html",
-        total_users=total_users,
-        total_balance=total_balance,
-        active_users=active_users,
-        clients=client_list
-    )
+        return render_template(
+            "admin.html",
+            total_users=total_users,
+            total_balance=total_balance,
+            active_users=active_users,
+            clients=client_list
+        )
 
+    finally:
+        cursor.close()
 
 
 
 
 @app.route("/verify-register", methods=["POST"])
 def verify_register():
-    data = request.get_json()
-    if not data:
-        return jsonify({
-            "status": "error",
-            "message": "Invalid or missing JSON"
-        }), 400
-    required_fields = [
-        "email", "password", "first_name",
-        "last_name", "phone", "country", "currency", "verification_code"
-    ]
-    email = data.get("email")
-    password = data.get("password")
-    first_name = data.get("first_name")
-    last_name = data.get("last_name")
-    phone = data.get("phone")
-    country = data.get("country")
-    currency = data.get("currency")
-    verification_code = data.get("verification_code")
-
-
-
-    # check duplicate email
-    cursor.execute("SELECT email FROM USER_BASE")
-    existing_emails = {row[0] for row in cursor.fetchall()}
-    if email in existing_emails:
-        return jsonify({
-            "status": "error",
-            "message": "Email already exists"
-        }), 400
-
-    # Validate required fields
-    for field in required_fields:
-        if not data.get(field):
-            return jsonify({
-                "status": "error",
-                "message": f"Missing field: {field}"
-            }), 400
-        
-    # Start transaction
+    conn = None
+    cursor = None
     try:
+        conn = get_db()
+        cursor = conn.cursor()
+
+        data = request.get_json()
+        if not data:
+            return jsonify({"status":"error","message":"Invalid or missing JSON"}), 400
+
+        required_fields = [
+            "email", "password", "first_name",
+            "last_name", "phone", "country", "currency", "verification_code"
+        ]
+
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({"status":"error","message":f"Missing field: {field}"}), 400
+
+        email = data["email"]
+        password = data["password"]
+        first_name = data["first_name"]
+        last_name = data["last_name"]
+        phone = data["phone"]
+        country = data["country"]
+        currency = data["currency"]
+        verification_code = data["verification_code"]
+
+        # Check duplicate email safely
+        cursor.execute("SELECT email FROM USER_BASE WHERE email=%s", (email,))
+        if cursor.fetchone():
+            return jsonify({"status":"error","message":"Email already exists"}), 400
+
+        # Hash password
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+        # Insert user
         cursor.execute(
             """
-            INSERT INTO USER_BASE (email, password_hash, failed_attempts, last_login, last_failed_login, locked, lock_reason,active)
+            INSERT INTO USER_BASE (email, password_hash, failed_attempts, last_login, last_failed_login, locked, lock_reason, active)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             """,
-            (email,
-            hashed_password,
-            0,
-            None,
-            None,
-            False,
-            "",
-            True)
+            (email, hashed_password, 0, None, None, False, "", True)
         )
         user_id = cursor.lastrowid
+
+        # Insert customer info
         cursor.execute(
             """
             INSERT INTO CUST_BASE (user_id, first_name, last_name, phone, country, currency)
             VALUES (%s, %s, %s, %s, %s, %s)
             """,
-            (user_id,
-            first_name,
-            last_name,
-            phone,
-            country,
-            currency)
+            (user_id, first_name, last_name, phone, country, currency)
         )
 
-        cursor.execute(
-            """
-            INSERT INTO WALLET_BASE (user_id)
-            VALUES (%s)
-            """,
-            (user_id,)
-        )
-        send_email(
-            email,
-            "Welcome to Leaner Beam LLC - Verify Your Account",
-            f"Here's your verification code: {verification_code}\n Please don't share with anyone",
-            False
-        )
+        # Insert wallet
+        cursor.execute("INSERT INTO WALLET_BASE (user_id) VALUES (%s)", (user_id,))
+
+        # Send verification email safely
+        try:
+            send_email(
+                email,
+                "Welcome to Leaner Beam LLC - Verify Your Account",
+                f"Here's your verification code: {verification_code}\nPlease don't share with anyone",
+                False
+            )
+        except Exception as e:
+            print("EMAIL ERROR:", e)
+
         conn.commit()
-        return jsonify({
-            "status": "success",
-            "message": "Registration successful. Verification email sent."
-        }), 200
+        return jsonify({"status":"success","message":"Registration successful. Verification email sent."}), 200
+
     except Exception as e:
-        conn.rollback()
-        return jsonify({
-            "status": "error",
-            "message": f"Registration failed: {str(e)}"
-        }), 500
-    
+        if conn:
+            conn.rollback()
+        print("REGISTER ERROR:", e)
+        return jsonify({"status":"error","message":f"Registration failed: {str(e)}"}), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
 @app.route("/verify-email", methods=["POST"])
 def verify_email():
-    data = request.get_json()
-    if not data:
-        return jsonify({
-            "status": "error",
-            "message": "Invalid or missing JSON"
-        }), 400
-    email = data.get("email")
-    verification_code = data.get("verification_code")
-    entered_code = data.get("entered_code")
+    conn = None
+    cursor = None
+    try:
+        conn = get_db()
+        cursor = conn.cursor()
 
-    required_fields = [
-        "email", "verification_code", "entered_code"
-    ]
-    # Validate required fields
-    for field in required_fields:
-        if not data.get(field):
-            return jsonify({
-                "status": "error",
-                "message": f"Missing field: {field}"
-            }), 400
-        
-    if verification_code != entered_code:
-        return jsonify({
-            "status": "error",
-            "message": "Invalid verification code."
-        }), 400
+        data = request.get_json()
+        if not data:
+            return jsonify({"status":"error","message":"Invalid or missing JSON"}), 400
 
-    # For demonstration, assume verification_code is always correct
-    cursor.execute(
-        "UPDATE USER_BASE SET email_verified = %s WHERE email = %s",
-        (True, email)
-    )
+        required_fields = ["email", "verification_code", "entered_code"]
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({"status":"error","message":f"Missing field: {field}"}), 400
 
-    year = datetime.now().year
-    welcome_message = f"""
+        email = data["email"]
+        verification_code = data["verification_code"]
+        entered_code = data["entered_code"]
+
+        if verification_code != entered_code:
+            return jsonify({"status":"error","message":"Invalid verification code."}), 400
+
+        # Update email_verified safely
+        cursor.execute(
+            "UPDATE USER_BASE SET email_verified = %s WHERE email = %s",
+            (True, email)
+        )
+
+        # Send welcome email safely
+        year = datetime.now().year
+            welcome_message = f"""
         <body style="font-family: Arial, sans-serif; line-height: 1.6;">
         <!DOCTYPE html>
 
@@ -462,133 +444,104 @@ def verify_email():
 </html>
 </body>
     """
-    send_email(
-        email,
-        "Welcome to Leaner Beam LLC  🎉",
-        welcome_message,
-        True
-    )
-    conn.commit()
-    return jsonify({
-        "status": "success",
-        "message": "Email verified successfully."
-    }), 200
+
+        try:
+            send_email(
+                email,
+                "Welcome to Leaner Beam LLC  🎉",
+                welcome_message,
+                True
+            )
+        except Exception as e:
+            print("EMAIL ERROR:", e)
+
+        conn.commit()
+        return jsonify({"status":"success","message":"Email verified successfully."}), 200
+
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print("VERIFY EMAIL ERROR:", e)
+        return jsonify({"status":"error","message":f"Email verification failed: {str(e)}"}), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
 
 
 
 @app.route("/loginp", methods=["POST"])
 def verifylogin():
-    data = request.get_json()
-
-    if not data:
-        return jsonify({
-            "status": "error",
-            "message": "Invalid or missing JSON"
-        }), 400
-    
-    required_fields = [
-        'email',
-        'password'
-    ]
-
-    # Validate required fields
-    for field in required_fields:
-        if not data.get(field):
-            return jsonify({
-                "status": "error",
-                "message": f"Missing field: {field}"
-            }), 400
-    conn = get_db()
-    cursor = conn.cursor()
-
+    conn = None
+    cursor = None
     try:
+        # --- CREATE A NEW DB CONNECTION ---
+        conn = get_db()
+        cursor = conn.cursor()
+
+        # --- GET JSON DATA ---
+        data = request.get_json()
+        if not data:
+            return jsonify({"status": "error", "message": "Invalid or missing JSON"}), 400
+
+        for field in ["email", "password"]:
+            if not data.get(field):
+                return jsonify({"status": "error", "message": f"Missing field: {field}"}), 400
+
+        # --- FETCH USER ---
         cursor.execute(
-            """
-            SELECT password_hash, locked, failed_attempts, last_failed_login,email,lock_reason, user_id
-            FROM USER_BASE
-            WHERE email=%s
-            """,
+            "SELECT password_hash, locked, failed_attempts, last_failed_login, email, lock_reason, user_id FROM USER_BASE WHERE email=%s",
             (data['email'],)
         )
         user = cursor.fetchone()
-
         if not user:
-            return jsonify({
-                "status": "error",
-                "message":"User not found"
-            }),400
-        
-        if user[1]:
-            return jsonify({
-                "status": "error",
-                "message":  f"Account locked! Reason: {user[5]}" 
-            }), 400
-        
+            return jsonify({"status": "error", "message": "User not found"}), 400
 
+        # --- CHECK IF ACCOUNT IS LOCKED ---
+        if user[1]:  # locked
+            return jsonify({"status": "error", "message": f"Account locked! Reason: {user[5]}"}), 400
 
-        current_password = user[0]
-        password = data['password']
-        hashed = hashlib.sha256(password.encode()).hexdigest()
-        print(hashed)
-        print(current_password)
-        user_id = user[6]
-
-        if hashed != current_password:
-            # Failed attempt
-            new_attempts = user[2] + 1  
+        # --- VERIFY PASSWORD ---
+        hashed = hashlib.sha256(data['password'].encode()).hexdigest()
+        if hashed != user[0]:
+            # Update failed attempts
+            new_attempts = user[2] + 1
             cursor.execute(
                 "UPDATE USER_BASE SET failed_attempts=%s, last_failed_login=NOW() WHERE email=%s",
-                (new_attempts, data['email']),
+                (new_attempts, data['email'])
             )
-            conn.commit()
-
             if new_attempts >= 3:
                 cursor.execute(
                     "UPDATE USER_BASE SET locked=1, lock_reason=%s WHERE email=%s",
-                    ("Too many failed login attempts", data['email']),
+                    ("Too many failed login attempts", data['email'])
                 )
-                conn.commit()
-            return jsonify({
-                "status": "error",
-                "message": "Incorrect Password"
-            }), 400
-        
+            conn.commit()
+            return jsonify({"status": "error", "message": "Incorrect Password"}), 400
 
-        # --- Successful login ---
-
+        # --- SUCCESSFUL LOGIN ---
         cursor.execute(
-            "UPDATE USER_BASE SET failed_attempts=0, last_login= NOW() WHERE email=%s",
+            "UPDATE USER_BASE SET failed_attempts=0, last_login=NOW() WHERE email=%s",
             (data['email'],)
         )
 
-
-        cursor.execute(
-            """
-            SELECT *
-            FROM WALLET_BASE
-            WHERE user_id=%s
-            """,
-            (user_id,)
-        )
-        w = cursor.fetchone()
-        if not w :
-            cursor.execute(
-                """
-                INSERT INTO WALLET_BASE (user_id)
-                VALUES(%s)
-                """,
-                (user_id,)
-            )
+        # --- ENSURE WALLET EXISTS ---
+        user_id = user[6]
+        cursor.execute("SELECT * FROM WALLET_BASE WHERE user_id=%s", (user_id,))
+        if not cursor.fetchone():
+            cursor.execute("INSERT INTO WALLET_BASE (user_id) VALUES (%s)", (user_id,))
 
         conn.commit()
 
-        # --- Send login notification ---
+        # --- LOGIN NOTIFICATION EMAIL ---
         email = data['email']
         login_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         ip_address = request.remote_addr or "Unknown"
-        location = "Unknown"  # Geolocation would require an external service
+        location = "Unknown"
         device = request.user_agent.string or "Unknown"
 
+        
         login_html = f"""
 
 
@@ -704,23 +657,21 @@ def verifylogin():
 </body>
 </html>
 
-"""     
+""" 
+
+        # Wrap email in try/except so it does not break login
+        try:
+            send_email(email, "Leaner Beam LLC - Login Notification", login_html, True)
+        except Exception as e:
+            print("EMAIL ERROR:", e)
+
         session['user_id'] = user_id
-        send_email(
-            email,
-            "Leaner Beam LLC - Login Notification",
-            login_html,
-            True
-        )
-        return jsonify({
-            "status": "success",
-            "message": "Login successful"
-        }), 200
+        return jsonify({"status": "success", "message": "Login successful"}), 200
+
     except Exception as e:
-        return jsonify({
-            "status": "error",
-            "message": f"Login failed: {str(e)}"
-        }), 500
+        print("LOGIN ERROR:", e)
+        return jsonify({"status": "error", "message": f"Login failed: {str(e)}"}), 500
+
     finally:
         if cursor:
             cursor.close()
@@ -737,13 +688,14 @@ def reset():
         if not data.get(field):
             return jsonify({"status": "error", "message": f"Missing {field}"}), 400
 
+    conn = None
+    cursor = None
     try:
+        conn = get_db()  # Use your get_db() helper
+        cursor = conn.cursor()
+
         cursor.execute(
-            """
-            SELECT email
-            FROM USER_BASE
-            WHERE email=%s
-            """,
+            "SELECT email FROM USER_BASE WHERE email=%s",
             (data['email'],)
         )
         user = cursor.fetchone()
@@ -751,20 +703,17 @@ def reset():
         if not user:
             return jsonify({"status": "error", "message": "User not found"}), 404
 
-
-        if data['email'] != user[0]:
-            return jsonify({"status": "error", "message": "Email does not match"}), 400
         email = data['email']
         reset_code = secrets.token_hex(3)
         reset_code_hash = hashlib.sha256(reset_code.encode()).hexdigest()
-
         reset_code_expires = datetime.utcnow() + timedelta(minutes=10)
 
         cursor.execute(
             "UPDATE USER_BASE SET reset_code_hash=%s, reset_code_expires=%s WHERE email=%s",
-            (reset_code_hash,reset_code_expires, data['email'])
+            (reset_code_hash, reset_code_expires, email)
         )
         conn.commit()
+
         reset_password_html = f"""
 <body style="margin:0; padding:0; background-color:#f4f6f8; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;">
     <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
@@ -830,7 +779,6 @@ def reset():
 </body>
 """
 
-
         send_email(
             recipient=email,
             subject="Leaner Beam LLC - Password Reset Code",
@@ -838,87 +786,75 @@ def reset():
             html=True
         )
 
-        return jsonify({
-            "status": "success",
-            "message": "Reset code sent to email"
-        }), 200
+        return jsonify({"status": "success", "message": "Reset code sent to email"}), 200
 
     except Exception as e:
+        if conn:
+            conn.rollback()
+        print("RESETPASS ERROR:", e)
         return jsonify({
             "status": "error",
             "message": "Server error",
             "details": str(e)
         }), 500
-    
-@app.route("/save-password", methods=["POST"])
-def savepassword():
-    data = request.get_json()
 
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+    
+
+
+
+
+@app.route("/save-password", methods=["POST"])
+def save_password():
+    data = request.get_json()
     if not data:
-        return jsonify({
-            "status": "error",
-            "message": "Invalid or missing JSON"
-        }), 400
+        return jsonify({"status": "error", "message": "Invalid or missing JSON"}), 400
 
     required_fields = ["email", "reset_code", "new_password"]
     for field in required_fields:
         if not data.get(field):
-            return jsonify({
-                "status": "error",
-                "message": f"Missing field: {field}"
-            }), 400
+            return jsonify({"status": "error", "message": f"Missing field: {field}"}), 400
+
+    conn = None
+    cursor = None
 
     try:
+        # Get fresh DB connection
+        conn = get_db()
+        cursor = conn.cursor()
+
+        # Fetch user info
         cursor.execute(
-            """
-            SELECT reset_code_hash, reset_code_expires, email
-            FROM USER_BASE
-            WHERE email=%s
-            """,
+            "SELECT reset_code_hash, reset_code_expires, email FROM USER_BASE WHERE email=%s",
             (data["email"],)
         )
         user = cursor.fetchone()
-
         if not user:
-            return jsonify({
-                "status": "error",
-                "message": "User not found"
-            }), 404
+            return jsonify({"status": "error", "message": "User not found"}), 404
 
         stored_hash, expires_at, email = user
 
         if not stored_hash or not expires_at:
-            return jsonify({
-                "status": "error",
-                "message": "No active reset request"
-            }), 400
-        
-
+            return jsonify({"status": "error", "message": "No active reset request"}), 400
 
         if isinstance(expires_at, str):
             expires_at = datetime.fromisoformat(expires_at)
 
-
-
         if datetime.utcnow() > expires_at:
-            return jsonify({
-                "status": "error",
-                "message": "Reset code expired"
-            }), 400
+            return jsonify({"status": "error", "message": "Reset code expired"}), 400
 
-        entered_hash = hashlib.sha256(
-            data["reset_code"].encode()
-        ).hexdigest()
+        entered_hash = hashlib.sha256(data["reset_code"].encode()).hexdigest()
         if entered_hash != stored_hash:
-            return jsonify({
-                "status": "error",
-                "message": "Invalid reset code"
-            }), 400
+            return jsonify({"status": "error", "message": "Invalid reset code"}), 400
 
-        new_password_hash = hashlib.sha256(
-            data["new_password"].encode()).hexdigest()
+        # Hash new password
+        new_password_hash = hashlib.sha256(data["new_password"].encode()).hexdigest()
 
-         # Update password and clear reset code
+        # Update password and clear reset code
         cursor.execute(
             """
             UPDATE USER_BASE
@@ -929,123 +865,103 @@ def savepassword():
                 failed_attempts=0
             WHERE email=%s
             """,
-            (new_password_hash, data["email"])
+            (new_password_hash, email)
         )
         conn.commit()
 
-        # Email Notification
-        password_reset_success_html = f"""
+        # Send email notification (doesn't break flow if fails)
+        password_reset_email = f"""
 <body style="margin:0; padding:0; background-color:#f4f6f8; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
-        <tr>
-            <td align="center">
-                <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px; background:#ffffff; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.08); overflow:hidden;">
-                    
-                    <!-- Header -->
-                    <tr>
-                        <td style="background:#1aa251; padding:20px; text-align:center;">
-                            <h2 style="margin:0; color:#ffffff; font-weight:600;">
-                                Leaner Beam LLC
-                            </h2>
-                        </td>
-                    </tr>
-
-                    <!-- Body -->
-                    <tr>
-                        <td style="padding:30px;">
-                            <h3 style="margin-top:0; color:#333333;">
-                                Password Reset Successful 🎉
-                            </h3>
-
-                            <p style="color:#555555; font-size:15px; line-height:1.6;">
-                                Your password has been successfully reset.
-                            </p>
-
-                            <p style="color:#555555; font-size:15px; line-height:1.6;">
-                                You can now log in to your account using your new password.
-                            </p>
-
-                            <!-- Login Button -->
-                            <div style="text-align:center; margin:30px 0;">
-                                <a href="{LOGIN_URL}"
-                                   style="display:inline-block; padding:12px 26px; background:#1558B0; color:#ffffff; text-decoration:none; border-radius:6px; font-weight:500; font-size:15px;">
-                                    Go to Login
-                                </a>
-                            </div>
-
-                            <p style="color:#777777; font-size:14px; line-height:1.6;">
-                                If you did not perform this action, please contact support immediately.
-                            </p>
-                        </td>
-                    </tr>
-
-                    <!-- Footer -->
-                    <tr>
-                        <td style="background:#f4f6f8; padding:16px; text-align:center;">
-                            <p style="margin:0; color:#888888; font-size:13px;">
-                                © {datetime.now().year} Leaner Beam LLC. All rights reserved.
-                            </p>
-                        </td>
-                    </tr>
-
-                </table>
-            </td>
-        </tr>
-    </table>
+<table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
+<tr><td align="center">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px; background:#ffffff; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.08); overflow:hidden;">
+<tr><td style="background:#1aa251; padding:20px; text-align:center;">
+<h2 style="margin:0; color:#ffffff; font-weight:600;">Leaner Beam LLC</h2>
+</td></tr>
+<tr><td style="padding:30px;">
+<h3 style="margin-top:0; color:#333333;">Password Reset Successful 🎉</h3>
+<p style="color:#555555; font-size:15px; line-height:1.6;">Your password has been successfully reset.</p>
+<p style="color:#555555; font-size:15px; line-height:1.6;">You can now log in to your account using your new password.</p>
+<div style="text-align:center; margin:30px 0;">
+<a href="{LOGIN_URL}" style="display:inline-block; padding:12px 26px; background:#1558B0; color:#ffffff; text-decoration:none; border-radius:6px; font-weight:500; font-size:15px;">Go to Login</a>
+</div>
+<p style="color:#777777; font-size:14px; line-height:1.6;">If you did not perform this action, please contact support immediately.</p>
+</td></tr>
+<tr><td style="background:#f4f6f8; padding:16px; text-align:center;">
+<p style="margin:0; color:#888888; font-size:13px;">© {datetime.now().year} Leaner Beam LLC. All rights reserved.</p>
+</td></tr>
+</table></td></tr></table>
 </body>
 """
-        send_email(
-            recipient=email,
-            subject="Leaner Beam LLC - Password Reset Successful",
-            body=password_reset_success_html,
-            html=True
-        )
+        try:
+            send_email(
+                recipient=email,
+                subject="Leaner Beam LLC - Password Reset Successful",
+                body=password_reset_email,
+                html=True
+            )
+        except Exception as e:
+            print("Email sending failed:", e)
 
-
-        return jsonify({
-            "status": "success",
-            "message": "Password updated successfully"
-        }), 200
+        return jsonify({"status": "success", "message": "Password updated successfully"}), 200
 
     except Exception as e:
-        conn.rollback()
-        return jsonify({
-            "status": "error",
-            "message": "Database error",
-            "details": str(e)
-        }), 500
+        if conn:
+            conn.rollback()
+        print("SAVE PASSWORD ERROR:", traceback.format_exc())
+        return jsonify({"status": "error", "message": "Database error", "details": str(e)}), 500
+
+    finally:
+        # Close cursor and connection to prevent leaks on Render
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
 
 
 @app.route("/payment/upload_proof", methods=["POST"])
 def upload_proof():
+    # Check file in request
     if 'proofImage' not in request.files:
         return jsonify({"status": "error", "message": "No proof image uploaded"}), 400
 
     file = request.files['proofImage']
     amount = request.form.get('amount')
+    
+    conn = None
+    cursor = None
 
     if not amount:
         return jsonify({"status": "error", "message": "Amount missing"}), 400
 
     try:
-        # remove commas from amount
-
-        amount = float(amount)
+        amount = float(amount.replace(",", ""))  # remove commas if any
     except ValueError:
         return jsonify({"status": "error", "message": "Invalid amount"}), 400
 
     if not file.filename or file.filename == '':
         return jsonify({"status": "error", "message": "No file selected"}), 400
 
-    if file and allowed_file(file.filename):
-        import uuid
+    if not allowed_file(file.filename):
+        return jsonify({"status": "error", "message": "Invalid file type"}), 400
 
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"status": "error", "message": "User not logged in"}), 401
+
+    try:
+        # Save file
+        import uuid
         filename = secure_filename(file.filename)
         unique_filename = f"{uuid.uuid4().hex}_{filename}"
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], unique_filename))
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+        file.save(file_path)
 
-        # Update wallet balance
-        user_id = session.get("user_id")
+        # Database operations
+        conn = get_db()
+        cursor = conn.cursor()
+
+        # Update wallet
         cursor.execute(
             """
             UPDATE WALLET_BASE
@@ -1056,35 +972,44 @@ def upload_proof():
             (amount, user_id)
         )
 
-        # record transaction
+        # Record transaction
         cursor.execute(
             """
             INSERT INTO TRANSACTION_BASE (user_id, amount, transaction_type, description, status, created_at)
             VALUES (%s, %s, %s, %s, %s, NOW())
             """,
-            (user_id, amount, 'DEPOSIT', 'Deposit via E-Wallt', 'COMPLETED')
+            (user_id, amount, 'DEPOSIT', 'Deposit via E-Wallet', 'COMPLETED')
         )
+
+        # Get user email
+        cursor.execute("SELECT email FROM USER_BASE WHERE user_id=%s", (user_id,))
+        email_result = cursor.fetchone()
+        if not email_result:
+            raise Exception("User email not found")
+        email = email_result[0]
 
         conn.commit()
 
-        # Send payment picture to admin email
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"status": "error", "message": "Database error", "details": str(e)}), 500
+    finally:
+        cursor.close()
+        conn.close()
+
+    # Send emails
+    try:
+        # Send to admin
         admin_email = "dondennisdarty116@gmail.com"
         send_email(
             admin_email,
             "New Deposit Proof Uploaded",
-            f"A new deposit proof has been uploaded by user ID: {user_id} for amount: {amount}.",
+            f"User ID: {user_id} uploaded deposit proof for amount: {amount}",
             False,
-            attachments=[os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)]
+            attachments=[file_path]
         )
 
-   
-        # Send success email
-        cursor.execute(
-            """SELECT email FROM USER_BASE WHERE user_id=%s""",(user_id,)
-        )
-        email_result = cursor.fetchone()
-        email = email_result[0] 
-
+        # Send success email to user
         deposit_html = f"""
           
 
@@ -1200,13 +1125,12 @@ def upload_proof():
             deposit_html,
             True
         )
+    except Exception as e:
+        print("Email sending error:", e)  # log error, don't break workflow
 
+    return jsonify({"status": "success", "message": "Proof uploaded successfully"}), 200
 
-        return jsonify({"status": "success", "message": "Proof uploaded successfully"}), 200
-    else:
-        return jsonify({"status": "error", "message": "Invalid file type"}), 400
-from werkzeug.security import check_password_hash
-
+    
 @app.route("/login/admin", methods=["POST"])
 def login_admin():
     data = request.get_json()
@@ -1223,7 +1147,10 @@ def login_admin():
             "message": "Username and password are required"
         }), 400
 
+    conn = None
     try:
+        conn = get_db()
+        cursor = conn.cursor()
         cursor.execute(
             """
             SELECT admin_id, username, password_hash, role, active
@@ -1271,8 +1198,13 @@ def login_admin():
         print("Admin login error:", e)
         return jsonify({
             "status": "error",
-            "message": "Internal server error"
+            "message": "Internal server error",
+            "details": str(e)
         }), 500
+    finally:
+        if conn:
+            conn.close()
+
 
 @app.route("/admin/add_funds", methods=["POST"])
 def admin_add_funds():
@@ -1288,10 +1220,17 @@ def admin_add_funds():
         return jsonify({"status": "error", "message": "Missing user_id or amount"}), 400
 
     try:
-        # Make sure amount is a positive number
         amount = float(amount)
         if amount <= 0:
             return jsonify({"status": "error", "message": "Amount must be greater than 0"}), 400
+    except ValueError:
+        return jsonify({"status": "error", "message": "Amount must be a valid number"}), 400
+
+    conn = None
+    cursor = None
+    try:
+        conn = get_db()
+        cursor = conn.cursor()
 
         # Update wallet balance
         cursor.execute(
@@ -1304,7 +1243,7 @@ def admin_add_funds():
             (amount, user_id)
         )
 
-        # Record the transaction
+        # Record transaction
         cursor.execute(
             """
             INSERT INTO TRANSACTION_BASE (user_id, amount, transaction_type, description, status, created_at)
@@ -1314,13 +1253,19 @@ def admin_add_funds():
         )
 
         conn.commit()
-
         return jsonify({"status": "success", "message": f"${amount} added to user's wallet"}), 200
 
     except Exception as e:
-        conn.rollback()
+        if conn:
+            conn.rollback()
         print("Error adding funds:", e)
-        return jsonify({"status": "error", "message": "Failed to add funds"}), 500
+        return jsonify({"status": "error", "message": "Failed to add funds", "details": str(e)}), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
 
 
 @app.route("/wallet/request_withdraw", methods=["POST"])
@@ -1329,36 +1274,49 @@ def request_withdraw():
     if not data:
         return jsonify({"status": "error", "message": "Invalid request"}), 400
 
-    amount = data.get("amount")
-    user_id = session.get("user_id")
-
-    if not user_id or not amount:
-        return jsonify({"status": "error", "message": "Unauthorized or invalid amount"}), 400
-
     try:
-        amount = float(amount)
+        amount = float(data.get("amount", 0))
+    except ValueError:
+        return jsonify({"status": "error", "message": "Invalid amount"}), 400
 
-        cursor.execute(
-            "SELECT balance FROM WALLET_BASE WHERE user_id=%s",
-            (user_id,)
-        )
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"status": "error", "message": "Unauthorized"}), 401
+
+    conn = get_db()
+    cursor = conn.cursor()
+    try:
+        # Fetch current balance
+        cursor.execute("SELECT balance FROM WALLET_BASE WHERE user_id=%s", (user_id,))
         wallet = cursor.fetchone()
-
         if not wallet:
             return jsonify({"status": "error", "message": "Wallet not found"}), 404
 
         current_balance = float(wallet[0])
-
-        # Minimum required logic
         minimum_required = current_balance + 400
 
+        if current_balance < minimum_required:
+            return jsonify({
+                "status": "error",
+                "message": (
+                    f"You can’t withdraw at this time. "
+                    f"Your balance must reach at least ${minimum_required:,.2f} to proceed."
+                )
+            }), 200
+
+        # If enough balance, create a withdrawal record
+        cursor.execute(
+            """
+            INSERT INTO TRANSACTION_BASE (user_id, amount, transaction_type, status, created_at)
+            VALUES (%s, %s, 'WITHDRAW', 'PENDING', %s)
+            """,
+            (user_id, amount, datetime.utcnow())
+        )
+        conn.commit()
+
         return jsonify({
-            "status": "error",
-            "message": (
-                f"You can’t withdraw at this time. "
-                f"Your balance must reach at least "
-                f"${minimum_required:,.2f} to proceed."
-            )
+            "status": "success",
+            "message": f"Withdrawal request of ${amount:,.2f} submitted successfully."
         }), 200
 
     except Exception as e:
@@ -1368,7 +1326,11 @@ def request_withdraw():
             "message": "Failed to process withdrawal request"
         }), 500
 
+    finally:
+        cursor.close()
+        conn.close()
+
 
 
 if __name__ == "__main__":      
-    app.run()
+    app.run(host='127.0.0.1', port=5502, debug=True)

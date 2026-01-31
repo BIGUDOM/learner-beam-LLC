@@ -133,27 +133,31 @@
                 }
             }
         });
-
 submitProofBtn.addEventListener('click', async () => {
     if (!fileInput.files.length) {
-        alert('Please upload a screenshot of your payment transaction.');
+        showErrorModal('Please upload a screenshot of your payment transaction.');
         return;
     }
 
-    const formData = new FormData();
     const rawAmount = document
-    .querySelector('.payment-card')
-    .getAttribute('data-amount');
+        .querySelector('.payment-card')
+        .getAttribute('data-amount');
 
-    // remove commas
+    if (!rawAmount) {
+        showErrorModal("Amount not found.");
+        return;
+    }
+
     const cleanAmount = rawAmount.replace(/,/g, '');
-    console.log("Amount", cleanAmount)
+    console.log("Uploading proof for amount:", cleanAmount);
+
+    const formData = new FormData();
     formData.append('proofImage', fileInput.files[0]);
-    formData.append(
-        'amount',
-         cleanAmount
-        
-    );
+    formData.append('amount', cleanAmount);
+
+    // Disable button and show loading
+    submitProofBtn.disabled = true;
+    submitProofBtn.textContent = "Uploading...";
 
     try {
         const response = await fetch('/payment/upload_proof', {
@@ -162,13 +166,20 @@ submitProofBtn.addEventListener('click', async () => {
         });
 
         const result = await response.json();
+        console.log("Upload proof response:", result);
 
         if (result.status === "success") {
-            alert('Proof uploaded successfully!');
+            showSuccessModal('Proof uploaded successfully!', null, 3000);
+            // Optional: reset form/file input
+            fileInput.value = '';
         } else {
-            alert(result.message || 'Failed to upload proof.');
+            showErrorModal(result.message || 'Failed to upload proof.');
         }
     } catch (error) {
         console.error('Error uploading proof:', error);
+        showErrorModal('An error occurred while uploading your proof.');
+    } finally {
+        submitProofBtn.disabled = false;
+        submitProofBtn.textContent = "Submit Proof";
     }
 });

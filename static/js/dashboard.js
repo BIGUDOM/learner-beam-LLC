@@ -114,32 +114,40 @@ PayBtn.addEventListener('click', () => {
 const requestWithdraw = document.getElementById("requestWithdraw");
 
 requestWithdraw.addEventListener("click", async () => {
-    const amount = parseFloat(document.getElementById("withdrawAmount").value);
+    const amountInput = document.getElementById("withdrawAmount");
+    const amount = parseFloat(amountInput.value);
 
     if (!amount || amount <= 0) {
         alert("Enter a valid withdrawal amount");
         return;
     }
 
+    const btn = document.getElementById("requestWithdraw");
+    btn.disabled = true;
+    btn.textContent = "Processing...";
+
     try {
         const response = await fetch("/wallet/request_withdraw", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ amount })
         });
 
         const result = await response.json();
 
-        if (result.status === "error") {
+        if (result.status === "success") {
             alert(result.message);
+            amountInput.value = ""; // clear input
         } else {
             alert(result.message);
         }
 
     } catch (err) {
         console.error(err);
-        alert("Something went wrong. Try again.");
+        alert("Something went wrong. Please try again.");
+    } finally {
+        btn.disabled = false;
+        btn.textContent = "Request Withdraw";
     }
 });
+

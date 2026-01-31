@@ -81,8 +81,10 @@
 // Form Submission
 loginForm.addEventListener('submit', async function(e) {
     e.preventDefault();
-    const email = document.getElementById("email_input").value;
+
+    const email = document.getElementById("email_input").value.trim();
     const password = document.getElementById("password_input").value;
+
     console.log("Submitting login form with:", { email, password });
 
     if (!email || !password) {
@@ -94,36 +96,44 @@ loginForm.addEventListener('submit', async function(e) {
     setLoading(loginBtn, "Logging in...");
 
     const payload = { email, password };
-     let raw;
-     let data;
 
-try {
-    const response = await fetch("/loginp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-    });
+    try {
+        const response = await fetch("/loginp", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
 
-    raw = await response.text();   // 👈 STORE IT
-    console.log("RAW RESPONSE:", raw);
+        // --- Always get raw text first ---
+        const raw = await response.text();
+        let data;
 
-    data = JSON.parse(raw);        // 👈 PARSE THE SAME VARIABLE
+        try {
+            data = JSON.parse(raw);  // Try parsing JSON
+        } catch (parseError) {
+            console.error("Failed to parse JSON from server:", parseError);
+            console.error("RAW RESPONSE:", raw);
+            showErrorModal("Server error occurred. Please try again later.");
+            clearLoading(loginBtn);
+            return;
+        }
 
-    clearLoading(loginBtn);
+        console.log("Login response:", data);
+        clearLoading(loginBtn);
 
-    if (data.status === "success") {
-        showSuccessModal("Login successful!", "/dashboard", 2000);
-    } else {
-        showErrorModal(data.message || "Login failed");
-    }
+        if (data.status === "success") {
+            showSuccessModal("Login successful!", "/dashboard", 2000);
+        } else {
+            showErrorModal(data.message || "Login failed");
+        }
 
     } catch (error) {
         clearLoading(loginBtn);
-        console.error("Error:", error);
-        showErrorModal("An error occurred during login");
+        console.error("Fetch error:", error);
+        showErrorModal("An error occurred during login. Please check your network and try again.");
     }
-     
 });
+
 
 const logindiv = document.getElementById('logindiv');
 const resetdiv = document.getElementById('resetdiv');
@@ -143,11 +153,7 @@ resetBtna.addEventListener('click', function () {
 resetForm.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-
-
-
-
-    setLoading(resetBtn, "Reseting......");
+    setLoading(resetBtn, "Reseting...");
 
     const d_dict = {
         email: document.getElementById("reset_email_input").value
@@ -160,78 +166,91 @@ resetForm.addEventListener("submit", async function (e) {
             body: JSON.stringify(d_dict)
         });
 
-        const data = await response.json();
-        console.log("Reset response:", data);
+        const raw = await response.text();
+        let data;
+        try {
+            data = JSON.parse(raw);
+        } catch {
+            console.error("RESET RAW RESPONSE →", raw);
+            showErrorModal("Server error. Please try again later.");
+            clearLoading(resetBtn);
+            return;
+        }
 
+        console.log("Reset response:", data);
         clearLoading(resetBtn);
 
         if (data.status === "success") {
-            resetdiv.style.display = 'none';
-            savediv.style.display = 'block';
+            resetdiv.style.display = "none";
+            savediv.style.display = "block";
         } else {
             showErrorModal(data.message || "Reset failed");
         }
 
     } catch (error) {
         clearLoading(resetBtn);
-        console.error("Error:", error);
-        showErrorModal("An error occurred during Reset");
+        console.error("RESET FETCH ERROR →", error);
+        showErrorModal("An error occurred during reset");
     }
 });
+
 
 saveForm.addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    const entered_code = document.getElementById("reset_code_input").value;
-    const password = document.getElementById("new_password_input").value;
-    const confirmpassowrd = document.getElementById("confirm_password_input").value;
+    const entered_code = document.getElementById("reset_code_input").value.trim();
+    const password = document.getElementById("new_password_input").value.trim();
+    const confirmpassword = document.getElementById("confirm_password_input").value.trim();
+    const email = document.getElementById("reset_email_input").value.trim();
 
-    if (!entered_code || !password || !confirmpassowrd) {
+    if (!entered_code || !password || !confirmpassword || !email) {
         showErrorModal("All fields are required.");
         return;
     }  
-    if (password !== confirmpassowrd) {
-        showErrorModal("Passowrds doesn't match");
+
+    if (password !== confirmpassword) {
+        showErrorModal("Passwords don't match.");
         return;
     }
 
-    setLoading(saveBtn, "Saving Passowrd....");
-    const d_dict = {
-        email: document.getElementById("reset_email_input").value,
+    setLoading(saveBtn, "Saving Password...");
+    saveBtn.disabled = true; // prevent double click
+
+    const payload = {
+        email: email,
         reset_code: entered_code, 
         new_password: password,
     };
 
-    console.log("DATA -", d_dict)
+    console.log("DATA →", payload);
 
-    
     try {
         const response = await fetch("/save-password", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(d_dict)
+            body: JSON.stringify(payload)
         });
 
         const data = await response.json();
-        console.log("Save response:", data);
+        console.log("Save response →", data);
 
         clearLoading(saveBtn);
+        saveBtn.disabled = false;
 
         if (data.status === "success") {
-            showSuccessModal("Password reset successfully. You can login now", "/login",3000);
+            showSuccessModal("Password reset successfully. You can log in now", "/login", 3000);
         } else {
             showErrorModal(data.message || "Save failed");
         }
 
     } catch (error) {
         clearLoading(saveBtn);
-        console.error("Error:", error);
-        showErrorModal("An error occurred during Reset");
+        saveBtn.disabled = false;
+        console.error("Error →", error);
+        showErrorModal("An error occurred during password reset.");
     }
-
-
-
 });
+
         
         // Real-time validation
         document.getElementById('email_input').addEventListener('blur', () => {

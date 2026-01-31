@@ -154,58 +154,72 @@ const verifyDiv = document.getElementById("verify");
 const userDiv = document.getElementById("user");
 const code = String(Math.floor(100000 + Math.random()*900000));
 // Form Submission
-registerForm.addEventListener('submit',async function(e) {
+registerForm.addEventListener('submit', async function(e) {
     e.preventDefault();
-   
 
-        const data = {
-            email:  document.getElementById('email').value, 
-            password: document.getElementById('password').value , 
-            first_name: document.getElementById('firstName').value,
-            last_name: document.getElementById('lastName').value, 
-            phone: document.getElementById('phone').value , 
-            country: document.getElementById('countryy').value, 
-            currency: document.getElementById('currency').value, 
-            verification_code: code
-        };
-        console.log("USER FORM DATA →", data);
+    const data = {
+        email:  document.getElementById('email').value.trim(), 
+        password: document.getElementById('password').value, 
+        first_name: document.getElementById('firstName').value.trim(),
+        last_name: document.getElementById('lastName').value.trim(), 
+        phone: document.getElementById('phone').value.trim(), 
+        country: document.getElementById('countryy').value.trim(), 
+        currency: document.getElementById('currency').value.trim(), 
+        verification_code: code
+    };
+    console.log("USER FORM DATA →", data);
 
-        setLoading(submitBtn, "Creating account...");
+    setLoading(submitBtn, "Creating account...");
+
+    try {
+        const response = await fetch("/verify-register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+
+        // --- Always read raw text first ---
+        const raw = await response.text();
+        let result;
+
         try {
-            const response = await fetch("/verify-register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            });
-
-            const result = await response.json();
-            console.log("USER FORM RESPONSE →", result);
+            result = JSON.parse(raw);
+        } catch (parseError) {
+            console.error("Failed to parse JSON from server:", parseError);
+            console.error("RAW RESPONSE:", raw);
+            showErrorModal("Server error occurred. Please try again later.");
             clearLoading(submitBtn);
-
-            if (result.status === "success") {
-                 userDiv.style.display = "none";
-                 verifyDiv.style.display = "block";
-            } else {
-                showErrorModal(result.message || "Registration failed");
-            }
-        } catch (err) {
-            clearLoading(submitBtn);
-            console.error("USER FORM ERROR →", err);
-            showErrorModal("Server error");
+            return;
         }
-        
 
+        console.log("USER FORM RESPONSE →", result);
+        clearLoading(submitBtn);
+
+        if (result.status === "success") {
+            userDiv.style.display = "none";
+            verifyDiv.style.display = "block";
+        } else {
+            showErrorModal(result.message || "Registration failed");
+        }
+
+    } catch (err) {
+        clearLoading(submitBtn);
+        console.error("USER FORM ERROR →", err);
+        showErrorModal("Server error. Please check your network and try again.");
+    }
 });
 
+
 const verifyForm = document.getElementById("VerifyForm");
+
 verifyForm.addEventListener("submit", async function (e) {
     e.preventDefault();
 
     const verifyBtn = document.getElementById("verifyButton");
-    const enteredcode = document.getElementById("verification_code_input").value;
+    const enteredCode = document.getElementById("verification_code_input").value;
 
-    if (!enteredcode) { 
-        showErrorModal("Enter the code you recieved.");
+    if (!enteredCode) { 
+        showErrorModal("Enter the code you received.");
         return;
     }
 
@@ -213,10 +227,11 @@ verifyForm.addEventListener("submit", async function (e) {
     setLoading(verifyBtn, "Verifying...");
 
     const data = {
-        email:document.getElementById('email').value,
-        entered_code: enteredcode,
-        verification_code:code
+        email: document.getElementById('email').value,
+        entered_code: enteredCode,
+        verification_code: code
     };
+
     try {
         const response = await fetch("/verify-email", {
             method: "POST",
@@ -224,7 +239,20 @@ verifyForm.addEventListener("submit", async function (e) {
             body: JSON.stringify(data)
         });
 
-        const result = await response.json();
+        // --- Always read raw text first ---
+        const raw = await response.text();
+        let result;
+
+        try {
+            result = JSON.parse(raw);
+        } catch (parseError) {
+            console.error("Failed to parse JSON from server:", parseError);
+            console.error("RAW RESPONSE:", raw);
+            showErrorModal("Server error occurred. Please try again later.");
+            clearLoading(verifyBtn);
+            return;
+        }
+
         console.log("VERIFY FORM RESPONSE →", result);
         clearLoading(verifyBtn);
 
@@ -233,13 +261,14 @@ verifyForm.addEventListener("submit", async function (e) {
         } else {
             showErrorModal(result.message || "Verification failed");
         }
+
     } catch (err) {
         clearLoading(verifyBtn);
         console.error("VERIFY FORM ERROR →", err);
-        showErrorModal("Server error");
+        showErrorModal("Server error. Please check your network and try again.");
     }
 });
-        
+     
         // Real-time validation
         document.getElementById('firstName').addEventListener('blur', () => {
             if (document.getElementById('firstName').value.trim() === '') {

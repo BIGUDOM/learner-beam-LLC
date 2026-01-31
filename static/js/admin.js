@@ -18,8 +18,7 @@
         const modalUserBalance = document.getElementById('modalUserBalance');
         const userSearch = document.getElementById('userSearch');
         let currentUser = null;
-        
-        // Admin Login
+
 adminLoginForm.addEventListener('submit', async function (e) {
     e.preventDefault();
 
@@ -33,25 +32,32 @@ adminLoginForm.addEventListener('submit', async function (e) {
 
     const data = { username, password };
 
-    setLoading(loginBtn, "Loading...");
+    setLoading(loginBtn, "Logging in...");
 
     try {
         const response = await fetch('/login/admin', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
 
         const result = await response.json();
+        console.log("Admin login response:", result);
 
         if (result.status === "success") {
+            // clear error
+            loginError.textContent = '';
             loginError.classList.remove('active');
+
+            // either redirect or show dashboard
+            // Option 1: redirect to a real dashboard route
+            // window.location.href = '/admin/dashboard';
+
+            // Option 2: show dashboard div
             loginPage.style.display = 'none';
             dashboardPage.style.display = 'block';
         } else {
-            loginError.textContent = result.message;
+            loginError.textContent = result.message || "Login failed";
             loginError.classList.add('active');
         }
 
@@ -109,12 +115,16 @@ adminLoginForm.addEventListener('submit', async function (e) {
         });
         
         // Confirm add funds
-    confirmAddFunds.addEventListener('click', async () => {
-    const amount = parseFloat(document.getElementById('addAmount').value);
-    const reason = document.getElementById('addReason').value;
+confirmAddFunds.addEventListener('click', async () => {
+    const amountInput = document.getElementById('addAmount');
+    const reasonInput = document.getElementById('addReason');
 
-    if (!amount || amount <= 0) {
+    const amount = parseFloat(amountInput.value);
+    const reason = reasonInput.value.trim() || "Admin deposit"; // default reason
+
+    if (isNaN(amount) || amount <= 0) {
         alert("Please enter a valid amount");
+        amountInput.focus();
         return;
     }
 
@@ -124,10 +134,14 @@ adminLoginForm.addEventListener('submit', async function (e) {
     }
 
     const payload = {
-        user_id: currentUser.id,   // <-- send this to backend
+        user_id: currentUser.id,
         amount,
         reason
     };
+
+    // Optional: show loading state on the button
+    confirmAddFunds.disabled = true;
+    confirmAddFunds.textContent = "Processing...";
 
     try {
         const response = await fetch('/admin/add_funds', {
@@ -141,15 +155,26 @@ adminLoginForm.addEventListener('submit', async function (e) {
         if (result.status === 'success') {
             alert(`$${amount} added to ${currentUser.name}'s wallet successfully!`);
             addFundsModal.classList.remove('active');
-            // Optionally update the table row balance
+
+            // Optional: update the balance in your UI
+            const userBalanceElement = document.querySelector(`#userBalance-${currentUser.id}`);
+            if (userBalanceElement) {
+                const currentBalance = parseFloat(userBalanceElement.textContent.replace(/,/g, '')) || 0;
+                userBalanceElement.textContent = (currentBalance + amount).toLocaleString();
+            }
+
         } else {
             alert(result.message || "Failed to add funds.");
         }
     } catch (err) {
-        console.error(err);
+        console.error("Add funds error:", err);
         alert("Error adding funds. Please try again.");
+    } finally {
+        confirmAddFunds.disabled = false;
+        confirmAddFunds.textContent = "Add Funds";
     }
 });
+
 
         
         // Close modal when clicking outside

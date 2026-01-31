@@ -79,49 +79,45 @@
         }
         
 // Form Submission
-loginForm.addEventListener('submit', async function(e) {
+loginForm.addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const email = document.getElementById("email_input").value.trim();
     const password = document.getElementById("password_input").value;
 
-    console.log("Submitting login form with:", { email, password });
-
     if (!email || !password) {
-        showErrorModal("Please enter both email and password.");
+        alert('email and password are required');
         return;
     }
+
+    const data = { email, password };
 
     const loginBtn = document.getElementById("submitBtn");
     setLoading(loginBtn, "Logging in...");
 
-    const payload = { email, password };
-
     try {
-        const response = await fetch("/loginp", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
+        const response = await fetch('/loginp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
         });
 
-        // --- Always get raw text first ---
-        const data = await response.json();
+        const result = await response.json();
+        console.log("login response:", result);
 
-    
-
-        console.log("Login response:", data);
-        clearLoading(loginBtn);
-
-        if (data.status === "success") {
+        if (result.status === "success") {
             showSuccessModal("Login successful!", "/dashboard", 2000);
+
+        
         } else {
             showErrorModal(data.message || "Login failed");
         }
 
     } catch (error) {
-        clearLoading(loginBtn);
         console.error("Fetch error:", error);
-        showErrorModal( "Fetch error:", error || "An error occurred during login. Please check your network and try again.");
+        showErrorModal("An error occurred during login. Please check your network and try again.");
+    } finally {
+        clearLoading(loginBtn);
     }
 });
 
@@ -494,6 +490,7 @@ function clearLoading(button) {
     button.innerHTML = button.dataset.originalText || "Submit";
     button.disabled = false;
 }
+
 
 
 

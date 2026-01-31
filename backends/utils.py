@@ -22,41 +22,31 @@ def login_required(view):
 
 from typing import Optional
 
-CONFIG_FILE = "config.json"
-
 def load_config() -> dict:
-    if not os.path.exists(CONFIG_FILE):
-        template = {
-            "smtp_server": "smtp.gmail.com",
-            "smtp_port": 587,
-            "sender_email": os.getenv("EMAIL_USER"),
-            "sender_password": os.getenv("EMAIL_PASSWORD"),
-            "admin_code": "admin123"
-        }
-        try:
-            with open(CONFIG_FILE, "w", encoding="utf-8") as f:
-                json.dump(template, f, indent=4)
-            print(f"⚠️ config.json created. Please edit it to add SMTP creds and set a secure admin_code.")
-        except Exception as e:
-            print(f"Could not create config file: {e}")
-
-    try:
-        with open(CONFIG_FILE, "r", encoding="utf-8") as f:
-            cfg = json.load(f)
-    except Exception:
-        cfg = {}
-
-    fixed_cfg = {
-        "smtp_server": cfg.get("smtp_server", "smtp.gmail.com"),
-        "smtp_port": cfg.get("smtp_port", 587),
-        "sender_email": cfg.get("sender_email",  os.getenv("EMAIL_USER")),
-        "sender_password": cfg.get("sender_password",os.getenv("EMAIL_PASSWORD")),
-        "admin_code": cfg.get("admin_code", "admin123")
+    """
+    Load configuration entirely from environment variables.
+    No config.json is used.
+    Required environment variables:
+      - EMAIL_USER
+      - EMAIL_PASSWORD
+      - ADMIN_CODE (optional, defaults to 'admin123')
+      - SMTP_SERVER (optional, defaults to 'smtp.gmail.com')
+      - SMTP_PORT (optional, defaults to 587)
+    """
+    cfg = {
+        "smtp_server": os.getenv("SMTP_SERVER", "smtp.gmail.com"),
+        "smtp_port": int(os.getenv("SMTP_PORT", 587)),
+        "sender_email": os.getenv("EMAIL_USER"),
+        "sender_password": os.getenv("EMAIL_PASSWORD"),
+        "admin_code": os.getenv("ADMIN_CODE", "admin123")
     }
 
-    return fixed_cfg
+    # Optional: warn if email creds are missing
+    if not cfg["sender_email"] or not cfg["sender_password"]:
+        print("⚠️ EMAIL_USER or EMAIL_PASSWORD not set. Emails will be disabled.")
 
-# ======== EMAIL ========
+    return cfg
+
 def send_email(recipient: str, subject: str, body: str, html: bool=False, attachments: Optional[list]=None) -> bool:
     try:
         cfg = load_config()
@@ -100,4 +90,21 @@ def send_email(recipient: str, subject: str, body: str, html: bool=False, attach
     except Exception as e:
         print(f"⚠️ Email failed: {e}")
         traceback.print_exc()
+
+
+import threading
+
+def send_email_async(recipient: str, subject: str, body: str, html: bool=False, attachments: Optional[list]=None):
+    """Send email in a separate thread to avoid blocking requests."""
+    def _send():
+        try:
+            success = send_email(recipient, subject, body, html, attachments)
+            if not success:
+                print(f"Failed to send email to {recipient}")
+        except Exception as e:
+            print(f"EMAIL THREAD ERROR: {e}")
+
+    thread = threading.Thread(target=_send, daemon=True)
+    thread.start()
+
         return False

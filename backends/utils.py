@@ -90,6 +90,8 @@ def send_email(recipient: str, subject: str, body: str, html: bool=False, attach
     except Exception as e:
         print(f"⚠️ Email failed: {e}")
         traceback.print_exc()
+        return False
+
 
 
 import threading
@@ -107,4 +109,4 @@ def send_email_async(recipient: str, subject: str, body: str, html: bool=False, 
     thread = threading.Thread(target=_send, daemon=True)
     thread.start()
 
-        return False
+ 

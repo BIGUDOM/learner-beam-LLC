@@ -348,7 +348,7 @@ def verify_email():
 
         # Send welcome email safely
         year = datetime.now().year
-            welcome_message = f"""
+        welcome_message = f"""
         <body style="font-family: Arial, sans-serif; line-height: 1.6;">
         <!DOCTYPE html>
 
@@ -1333,4 +1333,5 @@ def request_withdraw():
 
 
 if __name__ == "__main__":      
+
     app.run(host='127.0.0.1', port=5502, debug=True)

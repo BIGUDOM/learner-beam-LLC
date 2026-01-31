@@ -102,8 +102,9 @@ loginForm.addEventListener('submit', async function(e) {
             body: JSON.stringify(payload)
         });
 
-        const data = await response.json();
-        console.log("Login response:", data);
+        const text = await response.text(); // ALWAYS safe
+        let data;
+        data = JSON.parse(raw);
 
         clearLoading(loginBtn);
 

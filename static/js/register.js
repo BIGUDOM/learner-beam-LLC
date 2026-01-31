@@ -180,10 +180,10 @@ registerForm.addEventListener('submit', async function(e) {
 
         // --- Always read raw text first ---
         const raw = await response.text();
-        let result;
+        result = JSON.parse(raw);
 
         try {
-            result = JSON.parse(raw);
+            
         } catch (parseError) {
             console.error("Failed to parse JSON from server:", parseError);
             console.error("RAW RESPONSE:", raw);
@@ -554,4 +554,5 @@ function clearLoading(button) {
     button.innerHTML = button.dataset.originalText || "Submit";
     button.disabled = false;
 }
+
 

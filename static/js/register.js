@@ -167,6 +167,7 @@ registerForm.addEventListener('submit', async function(e) {
         currency: document.getElementById('currency').value.trim(), 
         verification_code: code
     };
+
     console.log("USER FORM DATA →", data);
 
     setLoading(submitBtn, "Creating account...");
@@ -178,14 +179,12 @@ registerForm.addEventListener('submit', async function(e) {
             body: JSON.stringify(data)
         });
 
-        // --- Always read raw text first ---
-        const raw = await response.text();
-        result = JSON.parse(raw);
-
+        let result;
         try {
-            
+            result = await response.json();
         } catch (parseError) {
-            console.error("Failed to parse JSON from server:", parseError);
+            const raw = await response.text();
+            console.error("Failed to parse JSON:", parseError);
             console.error("RAW RESPONSE:", raw);
             showErrorModal("Server error occurred. Please try again later.");
             clearLoading(submitBtn);
@@ -554,5 +553,6 @@ function clearLoading(button) {
     button.innerHTML = button.dataset.originalText || "Submit";
     button.disabled = false;
 }
+
 
 

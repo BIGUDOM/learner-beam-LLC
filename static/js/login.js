@@ -92,28 +92,30 @@ loginForm.addEventListener('submit', async function(e) {
 
     const loginBtn = document.getElementById("submitBtn");
     setLoading(loginBtn, "Logging in...");
-    let raw;   // 👈 define it FIRST
-    let data;
 
     const payload = { email, password };
+     let raw;
+     let data;
 
-    try {
-        const response = await fetch("/loginp", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
+try {
+    const response = await fetch("/loginp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    });
 
-        const text = await response.text(); // ALWAYS safe
-        data = JSON.parse(raw);
+    raw = await response.text();   // 👈 STORE IT
+    console.log("RAW RESPONSE:", raw);
 
-        clearLoading(loginBtn);
+    data = JSON.parse(raw);        // 👈 PARSE THE SAME VARIABLE
 
-        if (data.status === "success") {
-            showSuccessModal("Login successful!", "/dashboard", 2000);
-        } else {
-            showErrorModal(data.message || "Login failed");
-        }
+    clearLoading(loginBtn);
+
+    if (data.status === "success") {
+        showSuccessModal("Login successful!", "/dashboard", 2000);
+    } else {
+        showErrorModal(data.message || "Login failed");
+    }
 
     } catch (error) {
         clearLoading(loginBtn);

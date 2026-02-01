@@ -1132,81 +1132,6 @@ def upload_proof():
 
     return jsonify({"status": "success", "message": "Proof uploaded successfully"}), 200
 
-    
-@app.route("/login/admin", methods=["POST"])
-def login_admin():
-    data = request.get_json()
-
-    if not data:
-        return jsonify({"status": "error", "message": "Invalid request body"}), 400
-
-    username = data.get("username")
-    password = data.get("password")
-
-    if not username or not password:
-        return jsonify({
-            "status": "error",
-            "message": "Username and password are required"
-        }), 400
-
-    conn = None
-    try:
-        conn = get_db()
-        cursor = conn.cursor()
-        cursor.execute(
-            """
-            SELECT admin_id, username, password_hash, role, active
-            FROM ADMIN_BASE
-            WHERE username=%s
-            """,
-            (username,)
-        )
-        admin = cursor.fetchone()
-
-        if not admin:
-            return jsonify({
-                "status": "error",
-                "message": "Invalid username or password"
-            }), 401
-
-        admin_id, db_username, password_hash, role, active = admin
-
-        if not active:
-            return jsonify({
-                "status": "error",
-                "message": "Admin account is disabled"
-            }), 403
-
-        hashed = hashlib.sha256(password.encode()).hexdigest()
-        if hashed != password_hash:
-            return jsonify({
-                "status": "error",
-                "message": "Invalid username or password"
-            }), 401
-
-        # Store admin session
-        session["admin_id"] = admin_id
-        session["admin_username"] = db_username
-        session["admin_role"] = role
-        session["is_admin"] = True
-
-        return jsonify({
-            "status": "success",
-            "message": "Admin login successful",
-            "role": role
-        }), 200
-
-    except Exception as e:
-        print("Admin login error:", e)
-        return jsonify({
-            "status": "error",
-            "message": "Internal server error",
-            "details": str(e)
-        }), 500
-    finally:
-        if conn:
-            conn.close()
-
 
 @app.route("/admin/add_funds", methods=["POST"])
 def admin_add_funds():
@@ -1411,6 +1336,7 @@ def request_withdraw():
 if __name__ == "__main__":      
 
     app.run()
+
 
 
 

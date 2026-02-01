@@ -4,7 +4,6 @@
         const adminLoginForm = document.getElementById('adminLoginForm');
         const loginError = document.getElementById('loginError');
         const loginBtn = document.getElementById('loginBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
         const addFundsButtons = document.querySelectorAll('.add-funds-btn');
@@ -19,7 +18,8 @@
         const userSearch = document.getElementById('userSearch');
         let currentUser = null;
 
-loginBtn.addEventListener('click', (e) => {
+const logoutBtn = document.getElementById('logoutBtn');
+logoutBtn.addEventListener('click', (e) => {
         window.location.href = "/admin/logout";
 });
 
@@ -226,5 +226,6 @@ function clearLoading(button) {
     button.innerHTML = button.dataset.originalText || "Submit";
     button.disabled = false;
 }
+
 
 

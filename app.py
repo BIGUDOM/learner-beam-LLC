@@ -190,6 +190,7 @@ def admin_login():
 
 
 @app.route("/admin")
+@login_admin_required
 def admin_dashboard():
     if "admin_id" not in session:
         redirect("/admin/login")
@@ -1344,6 +1345,7 @@ def request_withdraw():
 if __name__ == "__main__":      
 
     app.run()
+
 
 
 

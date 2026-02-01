@@ -101,7 +101,7 @@ def logout():
     response.headers["Expires"] = "0"
     return response
 
-@app.route("admin/logout")
+@app.route("/admin/logout")
 def adin_logout():
     session.clear()
     response = redirect("/admin/login")
@@ -1344,6 +1344,7 @@ def request_withdraw():
 if __name__ == "__main__":      
 
     app.run()
+
 
 
 

@@ -168,8 +168,6 @@ registerForm.addEventListener('submit', async function(e) {
         verification_code: code
     };
 
-    console.log("USER FORM DATA →", data);
-
     setLoading(submitBtn, "Creating account...");
 
     try {
@@ -222,7 +220,6 @@ verifyForm.addEventListener("submit", async function (e) {
         return;
     }
 
-    console.log("VERIFY CODE →", code);
     setLoading(verifyBtn, "Verifying...");
 
     const data = {
@@ -553,6 +550,7 @@ function clearLoading(button) {
     button.innerHTML = button.dataset.originalText || "Submit";
     button.disabled = false;
 }
+
 
 
 

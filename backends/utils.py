@@ -20,6 +20,14 @@ def login_required(view):
         return view(*args, **kwargs)
     return wrapped_view
 
+def login_admin_required(view):
+    @wraps(view)
+    def wrapped_view(*args, **kwargs):
+        if "admin_id" not in session:
+            return redirect("/admin/login")
+        return view(*args, **kwargs)
+    return wrapped_view
+
 from typing import Optional
 
 def load_config() -> dict:
@@ -172,5 +180,6 @@ def send_email_async(recipient: str, subject: str, body: str, html: bool=False, 
     thread.start()
 
  
+
 
 

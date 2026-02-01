@@ -227,5 +227,28 @@ function clearLoading(button) {
     button.disabled = false;
 }
 
+const AUTO_LOGOUT_TIME = 5 * 60 * 1000; 
+let logoutTimer;
+
+
+function autoLogout() {
+    alert("You have been logged out due to inactivity.");
+    window.location.href= "/admin/logout"
+}
+
+function resetLogoutTimer() {
+    if (logoutTimer) clearTimeout(logoutTimer);
+    logoutTimer = setTimeout(autoLogout, AUTO_LOGOUT_TIME);
+}
+
+
+['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(event => {
+    window.addEventListener(event, resetLogoutTimer);
+});
+
+
+resetLogoutTimer();
+
+
 
 

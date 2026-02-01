@@ -16,7 +16,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import URLSafeTimedSerializer
 from email.mime.text import MIMEText
-from  backends.utils import send_email,login_required, send_email_async
+from  backends.utils import send_email,login_required, send_email_async, login_admin_required
 import mysql.connector
 from dotenv import load_dotenv
 import traceback
@@ -1341,10 +1341,41 @@ def request_withdraw():
         conn.close()
 
 
+@app.route("/admin/delete", methods=["POST"])
+@login_admin_required
+def delete_user():
+    data = request.get_json()
+    if not data:
+        return jsonify({"status": "error", "message": "Invalid request"}), 400
+
+    user_id = data.get("user_id")
+    if not user_id:
+        return jsonify({"status": "error", "message": "User ID is required"}), 400
+
+    try:
+        conn = get_db()
+        cursor = conn.cursor()
+
+        # Delete related wallet entries
+        cursor.execute("DELETE FROM WALLET_BASE WHERE user_id=%s", (user_id,))
+        # Delete related customer info
+        cursor.execute("DELETE FROM CUSTOMER_BASE WHERE user_id=%s", (user_id,))
+        # Delete user auth info
+        cursor.execute("DELETE FROM USER_BASE WHERE user_id=%s", (user_id,))
+
+        conn.commit()
+
+        return jsonify({"status": "success", "message": "User deleted successfully"}), 200
+
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"status": "error", "message": f"An error occurred: {str(e)}"}), 500
+
 
 if __name__ == "__main__":      
 
     app.run()
+
 
 
 

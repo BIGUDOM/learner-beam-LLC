@@ -47,48 +47,110 @@ def load_config() -> dict:
 
     return cfg
 
-def send_email(recipient: str, subject: str, body: str, html: bool=False, attachments: Optional[list]=None) -> bool:
-    try:
-        cfg = load_config()
-        if not cfg["sender_email"] or not cfg["sender_password"]:
-            print(f"Email not configured. Skipping sending to {recipient}.")
-            return False
+# def send_email(recipient: str, subject: str, body: str, html: bool=False, attachments: Optional[list]=None) -> bool:
+#     try:
+#         cfg = load_config()
+#         if not cfg["sender_email"] or not cfg["sender_password"]:
+#             print(f"Email not configured. Skipping sending to {recipient}.")
+#             return False
 
-        msg = MIMEMultipart()
-        msg["From"] = cfg["sender_email"]
-        msg["To"] = recipient
-        msg["Subject"] = subject
+#         msg = MIMEMultipart()
+#         msg["From"] = cfg["sender_email"]
+#         msg["To"] = recipient
+#         msg["Subject"] = subject
 
-        if html:
-            msg.attach(MIMEText(body, "html"))
-        else:
-            msg.attach(MIMEText(body, "plain"))
+#         if html:
+#             msg.attach(MIMEText(body, "html"))
+#         else:
+#             msg.attach(MIMEText(body, "plain"))
 
-        # Attach files if any
-        if attachments:
-            for path in attachments:
-                try:
-                    if os.path.exists(path):
-                        with open(path, "rb") as f:
-                            part = MIMEApplication(f.read(), Name=os.path.basename(path))
-                            part["Content-Disposition"] = f'attachment; filename="{os.path.basename(path)}"'
-                            msg.attach(part)
-                    else:
-                        print(f"Attachment not found, skipping: {path}")
-                except Exception as e:
-                    print(f"Failed to attach {path}: {e}")
+#         # Attach files if any
+#         if attachments:
+#             for path in attachments:
+#                 try:
+#                     if os.path.exists(path):
+#                         with open(path, "rb") as f:
+#                             part = MIMEApplication(f.read(), Name=os.path.basename(path))
+#                             part["Content-Disposition"] = f'attachment; filename="{os.path.basename(path)}"'
+#                             msg.attach(part)
+#                     else:
+#                         print(f"Attachment not found, skipping: {path}")
+#                 except Exception as e:
+#                     print(f"Failed to attach {path}: {e}")
 
-        # Send email using configured SMTP server
-        with smtplib.SMTP(cfg["smtp_server"], cfg["smtp_port"]) as server:
-            server.starttls()
-            server.login(cfg["sender_email"], cfg["sender_password"])
-            server.send_message(msg)
+#         # Send email using configured SMTP server
+#         with smtplib.SMTP(cfg["smtp_server"], cfg["smtp_port"]) as server:
+#             server.starttls()
+#             server.login(cfg["sender_email"], cfg["sender_password"])
+#             server.send_message(msg)
 
    
+#         return True
+
+#     except Exception as e:
+#         print(f"⚠️ Email failed: {e}")
+#         traceback.print_exc()
+#         return False
+
+
+import base64
+import requests
+
+
+def send_email(
+    recipient: str,
+    subject: str,
+    body: str,
+    html: bool = False,
+    attachments: Optional[list] = None
+) -> bool:
+    try:
+        api_key = os.getenv("RESEND_API_KEY")
+        sender = os.getenv("SENDER_EMAIL")
+
+        if not api_key or not sender:
+            print("⚠️ Email not configured")
+            return False
+
+        files = []
+        if attachments:
+            for path in attachments:
+                if os.path.exists(path):
+                    with open(path, "rb") as f:
+                        files.append({
+                            "filename": os.path.basename(path),
+                            "content": base64.b64encode(f.read()).decode()
+                        })
+                else:
+                    print(f"Attachment not found: {path}")
+
+        payload = {
+            "from": sender,
+            "to": [recipient],
+            "subject": subject,
+            "html": body if html else None,
+            "text": body if not html else None,
+            "attachments": files if files else None
+        }
+
+        response = requests.post(
+            "https://api.resend.com/emails",
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            },
+            json=payload,
+            timeout=10,
+        )
+
+        if response.status_code >= 400:
+            print("⚠️ Email error:", response.text)
+            return False
+
         return True
 
     except Exception as e:
-        print(f"⚠️ Email failed: {e}")
+        print("⚠️ Email failed:", e)
         traceback.print_exc()
         return False
 
@@ -110,3 +172,4 @@ def send_email_async(recipient: str, subject: str, body: str, html: bool=False, 
     thread.start()
 
  
+

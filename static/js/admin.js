@@ -19,6 +19,10 @@
         const userSearch = document.getElementById('userSearch');
         let currentUser = null;
 
+loginBtn.addEventListener('click', (e) => {
+        window.location.href = "/admin/logout";
+});
+
 adminLoginForm.addEventListener('submit', async function (e) {
     e.preventDefault();
 
@@ -222,4 +226,5 @@ function clearLoading(button) {
     button.innerHTML = button.dataset.originalText || "Submit";
     button.disabled = false;
 }
+
 

@@ -101,6 +101,15 @@ def logout():
     response.headers["Expires"] = "0"
     return response
 
+@app.route("admin/logout")
+def adin_logout():
+    session.clear()
+    response = redirect("/admin/login")
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
+
 @app.route("/dashboard")
 @login_required
 def dashboard():
@@ -1335,6 +1344,7 @@ def request_withdraw():
 if __name__ == "__main__":      
 
     app.run()
+
 
 
 

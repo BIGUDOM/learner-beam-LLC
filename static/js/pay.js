@@ -149,7 +149,6 @@ submitProofBtn.addEventListener('click', async () => {
     }
 
     const cleanAmount = rawAmount.replace(/,/g, '');
-    console.log("Uploading proof for amount:", cleanAmount);
 
     const formData = new FormData();
     formData.append('proofImage', fileInput.files[0]);
@@ -183,3 +182,4 @@ submitProofBtn.addEventListener('click', async () => {
         submitProofBtn.textContent = "Submit Proof";
     }
 });
+

@@ -161,7 +161,14 @@
         data-balance="{{ client.balance }}">
     <i class="fas fa-plus"></i> Add Funds
 </button>
-
+             <button id="deleteBtn" class="add-funds-btn"
+        data-user-id="{{ client.user_id }}"
+        data-user="{{ client.first_name }} {{ client.last_name }}"
+        data-email="{{ client.email }}"
+        data-location="{{ client.country if client.country else 'N/A' }}"
+        data-balance="{{ client.balance }}">
+    <i class="fa-solid fa-trash"></i></i> Delete User
+</button>
                             </td>
                         </tr>
                         {% endfor %}
@@ -239,4 +246,5 @@
     </script>
 </body>
 </html>
+
 

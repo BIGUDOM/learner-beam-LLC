@@ -45,17 +45,7 @@ adminLoginForm.addEventListener('submit', async function (e) {
         console.log("Admin login response:", result);
 
         if (result.status === "success") {
-            // clear error
-            loginError.textContent = '';
-            loginError.classList.remove('active');
-
-            // either redirect or show dashboard
-            // Option 1: redirect to a real dashboard route
-            // window.location.href = '/admin/dashboard';
-
-            // Option 2: show dashboard div
-            loginPage.style.display = 'none';
-            dashboardPage.style.display = 'block';
+            window.location.href= "/admin/login";
         } else {
             loginError.textContent = result.message || "Login failed";
             loginError.classList.add('active');

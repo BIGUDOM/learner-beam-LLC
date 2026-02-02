@@ -26,7 +26,7 @@ adminLoginForm.addEventListener('submit', async function (e) {
         console.log("Admin login response:", result);
 
         if (result.status === "success") {
-            window.location.href= "/admin/login";
+            window.location.href= "/admin";
         } else {
             loginError.textContent = result.message || "Login failed";
             loginError.classList.add('active');
@@ -53,4 +53,5 @@ function setLoading(button, text = "Loading...") {
 function clearLoading(button) {
     button.innerHTML = button.dataset.originalText || "Submit";
     button.disabled = false;
+
 }

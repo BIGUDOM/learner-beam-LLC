@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, timedelta
 from functools import wraps
 from flask import (
     Flask, request, jsonify, send_from_directory,
-    session, url_for,render_template, redirect
+    session, url_for,render_template, redirect, Response
 )
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
@@ -1432,6 +1432,7 @@ Sitemap: https://cryptoworldapp.com/sitemap.xml
 if __name__ == "__main__":      
 
     app.run()
+
 
 
 

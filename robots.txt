@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /login
+Disallow: /register
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /admin_login
+Disallow: /pay
+
+Sitemap: https://www.cryptoworldapp.com/sitemap.xml

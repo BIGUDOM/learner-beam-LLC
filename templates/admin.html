@@ -175,7 +175,7 @@
                             <td>{{ client.country if client.country else "N/A" }}</td>
                             <td class="wallet-balance">${{ "{:,.2f}".format(client.balance) }}</td>
                             <td>
-                        <button class="add-funds-btn"
+                        <button class="add-funds-btn add"
         data-user-id="{{ client.user_id }}"
         data-user="{{ client.first_name }} {{ client.last_name }}"
         data-email="{{ client.email }}"
@@ -268,6 +268,7 @@
     </script>
 </body>
 </html>
+
 
 
 

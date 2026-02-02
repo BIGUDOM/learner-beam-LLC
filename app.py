@@ -1370,11 +1370,69 @@ def delete_user():
     except Exception as e:
         conn.rollback()
         return jsonify({"status": "error", "message": f"An error occurred: {str(e)}"}), 500
+        
+@app.route("/sitemap.xml")
+def sitemap():
+    xml = """<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://cryptoworldapp.com/</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://cryptoworldapp.com/login</loc>
+  </url>
+
+  <url>
+    <loc>https://cryptoworldapp.com/register</loc>
+  </url>
+
+  <url>
+    <loc>https://cryptoworldapp.com/about</loc>
+  </url>
+
+  <url>
+    <loc>https://cryptoworldapp.com/contact</loc>
+  </url>
+
+  <url>
+    <loc>https://cryptoworldapp.com/services</loc>
+  </url>
+
+  <url>
+    <loc>https://cryptoworldapp.com/pricing</loc>
+  </url>
+
+  <url>
+    <loc>https://cryptoworldapp.com/legal</loc>
+  </url>
+
+</urlset>
+"""
+    return Response(xml, mimetype="application/xml")
+
+@app.route("/robots.txt")
+def robots():
+    txt = """User-agent: *
+Allow: /
+
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /admin_login
+Disallow: /pay
+
+Sitemap: https://cryptoworldapp.com/sitemap.xml
+"""
+    return Response(txt, mimetype="text/plain")
+
 
 
 if __name__ == "__main__":      
 
     app.run()
+
 
 
 

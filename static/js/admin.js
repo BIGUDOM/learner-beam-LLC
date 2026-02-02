@@ -2,7 +2,7 @@
         const dashboardPage = document.getElementById('dashboardPage');
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
-        const addFundsButtons = document.querySelectorAll('.add-funds-btn');
+        const addFundsButtons = document.querySelectorAll('.add');
         const addFundsModal = document.getElementById('addFundsModal');
         const closeAddFundsModal = document.getElementById('closeAddFundsModal');
         const cancelAddFunds = document.getElementById('cancelAddFunds');
@@ -240,6 +240,7 @@ function resetLogoutTimer() {
 
 
 resetLogoutTimer();
+
 
 
 

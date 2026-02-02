@@ -1,9 +1,5 @@
         // DOM Elements
-        const loginPage = document.getElementById('loginPage');
         const dashboardPage = document.getElementById('dashboardPage');
-        const adminLoginForm = document.getElementById('adminLoginForm');
-        const loginError = document.getElementById('loginError');
-        const loginBtn = document.getElementById('loginBtn');
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
         const addFundsButtons = document.querySelectorAll('.add-funds-btn');
@@ -21,46 +17,6 @@
 const logoutBtn = document.getElementById('logoutBtn');
 logoutBtn.addEventListener('click', (e) => {
         window.location.href = "/admin/logout";
-});
-
-adminLoginForm.addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    const username = document.getElementById('adminUsername').value.trim();
-    const password = document.getElementById('adminPassword').value.trim();
-
-    if (!username || !password) {
-        alert('Username and password are required');
-        return;
-    }
-
-    const data = { username, password };
-
-    setLoading(loginBtn, "Logging in...");
-
-    try {
-        const response = await fetch('/login/admin', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-
-        const result = await response.json();
-        console.log("Admin login response:", result);
-
-        if (result.status === "success") {
-            window.location.href= "/admin/login";
-        } else {
-            loginError.textContent = result.message || "Login failed";
-            loginError.classList.add('active');
-        }
-
-    } catch (error) {
-        console.error('Error logging in as admin:', error);
-        alert('Something went wrong. Please try again.');
-    } finally {
-        clearLoading(loginBtn);
-    }
 });
 
         
@@ -284,6 +240,7 @@ function resetLogoutTimer() {
 
 
 resetLogoutTimer();
+
 
 
 

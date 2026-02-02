@@ -33,7 +33,8 @@ deleteButtons.forEach(button => {
 
             const confirmDelete = confirm("Are you sure you want to delete this user?");
             if (!confirmDelete) return;
-
+                
+            setLoading(button, "Deleting...");
             try {
                 const response = await fetch('/admin/delete', {
                     method: 'POST',
@@ -44,7 +45,7 @@ deleteButtons.forEach(button => {
                 });
 
                 const result = await response.json();
-
+                clearLoading(button);
                 if (result.status === "success") {
                     alert(result.message);
 
@@ -56,6 +57,7 @@ deleteButtons.forEach(button => {
                 }
 
             } catch (error) {
+                clearLoading(button);
                 console.error("Error deleting user:", error);
                 alert("An error occurred. Please try again.");
             }
@@ -241,6 +243,7 @@ function resetLogoutTimer() {
 
 
 resetLogoutTimer();
+
 
 
 

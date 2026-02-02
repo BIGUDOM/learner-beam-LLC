@@ -3,6 +3,7 @@
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
         const addFundsButtons = document.querySelectorAll('.add');
+        const deleteButtons =document.querySelectorAll('.delete');
         const addFundsModal = document.getElementById('addFundsModal');
         const closeAddFundsModal = document.getElementById('closeAddFundsModal');
         const cancelAddFunds = document.getElementById('cancelAddFunds');
@@ -24,7 +25,43 @@ logoutBtn.addEventListener('click', (e) => {
         menuToggle.addEventListener('click', () => {
             sidebar.classList.toggle('active');
         });
-        
+
+deleteButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            const userId = button.getAttribute('data-user-id');
+            if (!userId) return;
+
+            const confirmDelete = confirm("Are you sure you want to delete this user?");
+            if (!confirmDelete) return;
+
+            try {
+                const response = await fetch('/admin/delete', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ user_id: userId })
+                });
+
+                const result = await response.json();
+
+                if (result.status === "success") {
+                    alert(result.message);
+
+                    // Remove the row from the table
+                    const row = button.closest('tr');
+                    if (row) row.remove();
+                } else {
+                    alert(result.message || "Failed to delete user");
+                }
+
+            } catch (error) {
+                console.error("Error deleting user:", error);
+                alert("An error occurred. Please try again.");
+            }
+        });
+});
+
         // Add Funds Modal Handlers
    addFundsButtons.forEach(button => {
     button.addEventListener('click', () => {
@@ -182,42 +219,6 @@ function clearLoading(button) {
     button.innerHTML = button.dataset.originalText || "Submit";
     button.disabled = false;
 }
-const deleteButtons =document.getElementById("deleteBtn");
-deleteButtons.forEach(button => {
-        button.addEventListener('click', async () => {
-            const userId = button.getAttribute('data-user-id');
-            if (!userId) return;
-
-            const confirmDelete = confirm("Are you sure you want to delete this user?");
-            if (!confirmDelete) return;
-
-            try {
-                const response = await fetch('/admin/delete', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ user_id: userId })
-                });
-
-                const result = await response.json();
-
-                if (result.status === "success") {
-                    alert(result.message);
-
-                    // Remove the row from the table
-                    const row = button.closest('tr');
-                    if (row) row.remove();
-                } else {
-                    alert(result.message || "Failed to delete user");
-                }
-
-            } catch (error) {
-                console.error("Error deleting user:", error);
-                alert("An error occurred. Please try again.");
-            }
-        });
-});
 
 const AUTO_LOGOUT_TIME = 5 * 60 * 1000; 
 let logoutTimer;
@@ -240,6 +241,7 @@ function resetLogoutTimer() {
 
 
 resetLogoutTimer();
+
 
 
 

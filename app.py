@@ -1359,7 +1359,7 @@ def delete_user():
         # Delete related wallet entries
         cursor.execute("DELETE FROM WALLET_BASE WHERE user_id=%s", (user_id,))
         # Delete related customer info
-        cursor.execute("DELETE FROM CUSTOMER_BASE WHERE user_id=%s", (user_id,))
+        cursor.execute("DELETE FROM CUST_BASE WHERE user_id=%s", (user_id,))
         # Delete user auth info
         cursor.execute("DELETE FROM USER_BASE WHERE user_id=%s", (user_id,))
 
@@ -1370,7 +1370,8 @@ def delete_user():
     except Exception as e:
         conn.rollback()
         return jsonify({"status": "error", "message": f"An error occurred: {str(e)}"}), 500
-        
+from flask import Response
+   
 @app.route("/sitemap.xml")
 def sitemap():
     xml = """<?xml version="1.0" encoding="UTF-8"?>
@@ -1432,6 +1433,7 @@ Sitemap: https://cryptoworldapp.com/sitemap.xml
 if __name__ == "__main__":      
 
     app.run()
+
 
 
 
